@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="referrer" content="no-referrer">
+<title>CaseMatch 海外AI面接プロダクトリサーチ — 5社比較</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --navy-dark: #122749;
+    --navy-light: #2A4F8A;
+    --dark-text: #1A1A2E;
+    --light-subtitle: #C9D8EF;
+    --accent-text: #94B4D4;
+    --light-gray: #F5F5F5;
+    --border: #E0E5EE;
+    --footer-gray: #6B7280;
+    --green: #1B5E20;
+    --green-bg: #E8F5E9;
+    --blue: #1565C0;
+    --teal: #00796B;
+    --teal-bg: #E0F2F1;
+    --red: #C62828;
+    --red-bg: #FFEBEE;
+    --orange: #EF6C00;
+    --orange-bg: #FFF3E0;
+    --accent-blue: #1976D2;
+    --accent-blue-bg: #E3F2FD;
+    --gold: #B8860B;
+    --gold-bg: #FFF7E5;
+    --gold-bg-strong: #FFE9B0;
+    --paper: #FAF7F2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
+    color: var(--dark-text);
+    line-height: 1.6;
+    background: #FAFAFA;
+    padding: 32px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: white;
+    padding: 28px 32px;
+    border-radius: 10px;
+    margin-bottom: 28px;
+  }
+  header .eyebrow {
+    font-size: 11px;
+    color: var(--accent-text);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  header .sub {
+    font-size: 14px;
+    color: var(--light-subtitle);
+  }
+  header .meta {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--accent-text);
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  header .meta b { color: white; font-weight: 600; }
+
+  /* ===== SECTION ===== */
+  section {
+    background: white;
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  section h2 {
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 6px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--navy);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  section h2 .sec-num {
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 16px;
+  }
+  section .sec-lead {
+    font-size: 13px;
+    color: var(--footer-gray);
+    margin-bottom: 18px;
+  }
+
+  /* ===== EXEC SUMMARY ===== */
+  .exec-conclusion {
+    background: var(--gold-bg);
+    border-left: 4px solid var(--gold);
+    padding: 16px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dark-text);
+    line-height: 1.7;
+  }
+  .reason-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .reason-card {
+    background: var(--light-gray);
+    border-radius: 6px;
+    padding: 14px 16px;
+    position: relative;
+    padding-left: 44px;
+  }
+  .reason-card .num {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    width: 22px;
+    height: 22px;
+    background: var(--navy);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .reason-card p { font-size: 13px; line-height: 1.55; }
+  .reason-card b { color: var(--navy); }
+  .exec-takeaway {
+    background: var(--navy);
+    color: white;
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .exec-takeaway .arrow { color: var(--gold); font-weight: 700; margin-right: 6px; }
+
+  /* ===== MATRIX TABLE ===== */
+  .matrix-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  table.matrix {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 1100px;
+  }
+  table.matrix th, table.matrix td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  table.matrix thead th {
+    background: var(--navy);
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    position: sticky;
+    top: 0;
+  }
+  table.matrix tbody th {
+    background: var(--light-gray);
+    color: var(--navy);
+    font-weight: 600;
+    width: 140px;
+    border-right: 1px solid var(--border);
+  }
+  table.matrix tr.row-highlight td,
+  table.matrix tr.row-highlight th {
+    background: var(--gold-bg);
+  }
+  table.matrix tr.row-highlight th { color: var(--gold); }
+  table.matrix .cell-type b { color: var(--navy); }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0;
+    border-bottom: 2px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--footer-gray);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color: var(--navy); }
+  .tab-btn.active {
+    color: var(--navy);
+    border-bottom-color: var(--navy);
+  }
+  .tab-panel { display: none; padding: 20px 4px 4px; }
+  .tab-panel.active { display: block; }
+
+  /* ===== COMPANY CARD ===== */
+  .company-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .company-head .name {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .company-head .tag {
+    font-size: 12px;
+    color: var(--footer-gray);
+  }
+  .company-quick {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .qbox {
+    background: var(--light-gray);
+    padding: 10px 12px;
+    border-radius: 5px;
+    border-left: 3px solid var(--navy);
+  }
+  .qbox .qlabel {
+    font-size: 10px;
+    color: var(--footer-gray);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .qbox .qvalue { font-size: 13px; font-weight: 600; color: var(--dark-text); }
+  .company-body p {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--dark-text);
+  }
+  .company-body p b { color: var(--navy); }
+  .pull-msg {
+    background: var(--navy-dark);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-style: italic;
+    margin: 12px 0;
+  }
+  .pull-msg::before { content: "" "; color: var(--gold); font-size: 18px; margin-right: 4px; }
+
+  /* ===== IMPLICATIONS ===== */
+  .impl-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .impl-card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--navy);
+  }
+  .impl-card.tone-green { border-left-color: var(--green); background: var(--green-bg); }
+  .impl-card.tone-blue { border-left-color: var(--accent-blue); background: var(--accent-blue-bg); }
+  .impl-card.tone-red { border-left-color: var(--red); background: var(--red-bg); }
+  .impl-card.tone-gold { border-left-color: var(--gold); background: var(--gold-bg); }
+  .impl-card h3 {
+    font-size: 14px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .impl-card p, .impl-card li { font-size: 12.5px; line-height: 1.6; }
+  .impl-card ul { padding-left: 18px; margin-top: 6px; }
+  .impl-card b { color: var(--navy); }
+
+  /* ===== Reverse Ramp（逆方向縦統合）===== */
+  .ramp-block {
+    background: linear-gradient(135deg, #FAF7F2 0%, #FFF7E5 100%);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin-bottom: 20px;
+  }
+  .ramp-block h3 {
+    font-size: 17px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .ramp-block .lead {
+    font-size: 13.5px;
+    color: var(--dark-text);
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+  .ramp-block .lead b { color: var(--gold); }
+  .ramp-flow {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 16px 0;
+  }
+  .ramp-side {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    position: relative;
+  }
+  .ramp-side.eight {
+    border-color: var(--red);
+    background: #FFF7F5;
+  }
+  .ramp-side.cmatch {
+    border-color: var(--green);
+    background: var(--green-bg);
+  }
+  .ramp-side .ramp-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .ramp-side.eight .ramp-label { color: var(--red); }
+  .ramp-side.cmatch .ramp-label { color: var(--green); }
+  .ramp-side h4 { font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+  .ramp-side .layer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+  }
+  .ramp-side .layer .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .ramp-side.eight .layer .dot { background: var(--red); }
+  .ramp-side.cmatch .layer .dot { background: var(--green); }
+  .ramp-side .layer.start { font-weight: 700; }
+  .ramp-side .layer.start .dot { width: 12px; height: 12px; box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
+  .ramp-arrow {
+    text-align: center;
+    color: var(--gold);
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .ramp-arrow .label {
+    font-size: 10px;
+    color: var(--footer-gray);
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+  .ramp-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .ramp-stat {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 10px;
+  }
+  .ramp-stat .label { font-size: 10px; color: var(--footer-gray); letter-spacing: 1px; text-transform: uppercase; }
+  .ramp-stat .value { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .ramp-stat .sub { font-size: 10px; color: var(--footer-gray); margin-top: 2px; }
+
+  /* ===== Positioning Map ===== */
+  .posmap-wrap {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .posmap-title {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .posmap-sub { font-size: 11.5px; color: var(--footer-gray); margin-bottom: 14px; }
+  .posmap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1.4 / 1;
+    background:
+      linear-gradient(to right, transparent 49.5%, var(--border) 49.5%, var(--border) 50.5%, transparent 50.5%),
+      linear-gradient(to bottom, transparent 49.5%, var(--border) 49.5%, var(--border) 50.5%, transparent 50.5%),
+      repeating-linear-gradient(to right, transparent 0, transparent 10%, rgba(0,0,0,0.02) 10%, rgba(0,0,0,0.02) 10.5%),
+      repeating-linear-gradient(to bottom, transparent 0, transparent 10%, rgba(0,0,0,0.02) 10%, rgba(0,0,0,0.02) 10.5%),
+      #FAFAFA;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    margin: 32px 60px 40px;
+  }
+  .posmap .axis-x-label, .posmap .axis-y-label {
+    position: absolute;
+    font-size: 11px;
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .posmap .axis-x-label { bottom: -28px; left: 50%; transform: translateX(-50%); }
+  .posmap .axis-y-label { top: 50%; left: -54px; transform: rotate(-90deg) translateX(50%); transform-origin: right center; }
+  .posmap .axis-tip {
+    position: absolute;
+    font-size: 10px;
+    color: var(--footer-gray);
+  }
+  .posmap .axis-tip.left { bottom: -22px; left: -10px; }
+  .posmap .axis-tip.right { bottom: -22px; right: -10px; }
+  .posmap .axis-tip.top { top: -22px; left: 50%; transform: translateX(-50%); }
+  .posmap .axis-tip.bottom { bottom: -10px; left: 50%; transform: translateX(-50%); }
+  .posmap .axis-tip.top-y { top: -8px; left: -56px; }
+  .posmap .axis-tip.bottom-y { bottom: -8px; left: -56px; }
+  .posmap .dot-player {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1.5px solid var(--navy);
+    border-radius: 16px;
+    padding: 3px 9px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .posmap .dot-player.foreign {
+    background: var(--red-bg);
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .posmap .dot-player.jp {
+    background: white;
+    border-color: var(--gray, var(--footer-gray));
+    color: var(--footer-gray);
+  }
+  .posmap .dot-player.target {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: white;
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(184,134,11,0.45);
+  }
+  .posmap .gap-zone {
+    position: absolute;
+    border: 2px dashed var(--gold);
+    background: rgba(255,247,229,0.4);
+    border-radius: 12px;
+  }
+  .posmap .gap-label {
+    position: absolute;
+    background: var(--gold);
+    color: white;
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .posmap-legend {
+    display: flex;
+    gap: 18px;
+    font-size: 11px;
+    color: var(--footer-gray);
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .posmap-legend .lg-dot { display: inline-block; width: 12px; height: 12px; border-radius: 8px; vertical-align: middle; margin-right: 5px; }
+  .posmap-legend .lg-foreign { background: var(--red-bg); border: 1.5px solid var(--red); }
+  .posmap-legend .lg-jp { background: white; border: 1.5px solid var(--footer-gray); }
+  .posmap-legend .lg-target { background: var(--gold); border: 1.5px solid var(--gold); }
+  .posmap-legend .lg-gap { background: rgba(255,247,229,0.4); border: 2px dashed var(--gold); }
+
+  /* ===== 6.1/6.2 inner tables ===== */
+  .inner-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+  .inner-table th, .inner-table td {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .inner-table thead th {
+    background: var(--navy);
+    color: white;
+    font-weight: 600;
+  }
+  .inner-table tbody td:first-child { background: var(--light-gray); font-weight: 600; color: var(--navy); }
+  .inner-table b { color: var(--navy); }
+
+  /* ===== conclusion box ===== */
+  .conclusion-box {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    padding: 14px 18px;
+    border-radius: 5px;
+    margin-top: 12px;
+  }
+  .conclusion-box h4 {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .conclusion-box ul { padding-left: 18px; }
+  .conclusion-box li { font-size: 13px; line-height: 1.7; margin-bottom: 5px; }
+  .conclusion-box b { color: var(--navy); }
+
+  /* ===== Name correction ===== */
+  .alert-section {
+    background: var(--red-bg);
+    border-left: 4px solid var(--red);
+    border-radius: 6px;
+    padding: 16px 20px;
+  }
+  .alert-section h3 {
+    font-size: 14px;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+  .alert-section .inner-table thead th { background: var(--red); }
+  .alert-section .note { font-size: 12px; color: var(--footer-gray); margin-top: 10px; font-style: italic; }
+
+  /* ===== Sources ===== */
+  details.sources {
+    background: var(--light-gray);
+    border-radius: 6px;
+    padding: 0;
+    border: 1px solid var(--border);
+  }
+  details.sources summary {
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    user-select: none;
+  }
+  details.sources summary::marker { color: var(--gold); }
+  details.sources[open] summary { border-bottom: 1px solid var(--border); }
+  .sources-body { padding: 14px 22px; }
+  .sources-body h4 {
+    font-size: 12px;
+    color: var(--navy);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 12px 0 6px;
+    border-bottom: 1px dashed var(--border);
+    padding-bottom: 4px;
+  }
+  .sources-body ul { list-style: none; padding-left: 0; }
+  .sources-body li { font-size: 11.5px; line-height: 1.6; padding: 2px 0; }
+  .sources-body a { color: var(--accent-blue); text-decoration: none; word-break: break-all; }
+  .sources-body a:hover { text-decoration: underline; }
+
+  /* ===== footer ===== */
+  footer {
+    text-align: center;
+    color: var(--footer-gray);
+    font-size: 11px;
+    padding: 18px 0 8px;
+    border-top: 1px solid var(--border);
+    margin-top: 12px;
+  }
+
+  /* ===== print ===== */
+  @media print {
+    @page { size: A4 landscape; margin: 10mm; }
+    body { padding: 0; max-width: none; background: white; }
+    section { box-shadow: none; page-break-inside: avoid; }
+    .tab-panel { display: block !important; page-break-inside: avoid; }
+    .tabs { display: none; }
+    .tab-panel::before {
+      content: attr(data-print-title);
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 14px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--navy);
+    }
+    details.sources { page-break-before: always; }
+    details.sources[open] summary, details.sources summary { pointer-events: none; }
+    details.sources .sources-body { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">CaseMatch / Foreign Product Research</div>
+  <h1>海外AI面接プロダクトリサーチ — 5社比較</h1>
+  <div class="sub">「一体型 vs 分離型」「コンテキスト統合度」の判断材料 / 5/24 CaseMatch定例向け</div>
+  <div class="meta">
+    <span><b>作成日</b> 2026-05-19</span>
+    <span><b>更新</b> 2026-05-23 §6追加深掘り</span>
+    <span><b>出典</b> 公式サイト・G2・Gartner・PitchBook・CB Insights・各種PR（全て公開情報）</span>
+  </div>
+</header>
+
+<!-- =========================
+     §0 エグゼクティブサマリ
+     ========================= -->
+<section>
+  <h2><span class="sec-num">§0</span> エグゼクティブサマリ</h2>
+  <div class="sec-lead">5社比較から導いた結論と4根拠。詳細は§1〜§3を参照。</div>
+
+  <div class="exec-conclusion">
+    結論：CaseMatchは「分離型のまま、ただし"前後の業務との接続点"だけ握る」の<span style="color:var(--red);">半一体型</span>に踏み込むべき。完全一体型はリスクが高い。
+  </div>
+
+  <div class="reason-grid">
+    <div class="reason-card">
+      <div class="num">1</div>
+      <p><b>完全一体型（Eightfold型）は資金規模が桁違い</b>（$410M調達／20億円超ARR帯）。日本のスタートアップが正面から戦う構造ではない。</p>
+    </div>
+    <div class="reason-card">
+      <div class="num">2</div>
+      <p><b>完全分離型（BrightHire型）は2025年11月にZoomに買収された</b>。単体ポイントソリューションは「面白いが買われる」運命。CaseMatchが目指すべきはこちら型を回避すること。</p>
+    </div>
+    <div class="reason-card">
+      <div class="num">3</div>
+      <p><b>Sapia.ai／Perfect／HireVueの3社全てが「採用全体ジャーニーの一部を握る」ハイブリッド型</b>に進化中。完全分離型は時代遅れ、完全一体型は資金勝負。</p>
+    </div>
+    <div class="reason-card">
+      <div class="num">4</div>
+      <p><b>コンテキスト軸で最も近いのはSapia.ai</b>（チャット型・候補者文脈深掘り型）。CaseMatchは「ナレッジグラフUIによるロックイン」で差別化可能。</p>
+    </div>
+  </div>
+
+  <div class="exec-takeaway">
+    <span class="arrow">→</span>D案「コンテキスト面接の第2世代」推奨。前後業務（JD設計／フィードバック自動生成）の"接点API"を持つが、ATSは目指さない。
+  </div>
+</section>
+
+<!-- =========================
+     §1 マトリクス
+     ========================= -->
+<section>
+  <h2><span class="sec-num">§1</span> 5社比較マトリクス</h2>
+  <div class="sec-lead">ハイライト行 = CaseMatchの戦略判断に直結する2軸（一体型/分離型 ＆ コンテキスト統合度）。</div>
+
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th style="width:140px;">項目</th>
+          <th>HireVue</th>
+          <th>Eightfold</th>
+          <th>BrightHire</th>
+          <th>Sapia.ai <span style="font-weight:400;font-size:10px;color:var(--accent-text);">(※Siera該当)</span></th>
+          <th>Perfect / GoPerfect <span style="font-weight:400;font-size:10px;color:var(--accent-text);">(※Hire Glow該当)</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>設立</th>
+          <td>2004年</td>
+          <td>2016年</td>
+          <td>2019年</td>
+          <td>2018年（旧PredictiveHire／豪州）</td>
+          <td>2023年（イスラエル・Tel Aviv）</td>
+        </tr>
+        <tr>
+          <th>調達額</th>
+          <td>$93M〜$390M（8ラウンド）</td>
+          <td>$410M（Series F）</td>
+          <td>$36M（Seed+A+B、2025/11にZoom買収）</td>
+          <td>非公開（推定$20M+）</td>
+          <td>$23M（Seed、2025/2）</td>
+        </tr>
+        <tr>
+          <th>従業員</th>
+          <td>約360名</td>
+          <td>約281名</td>
+          <td>非公開（Zoom傘下）</td>
+          <td>約100名</td>
+          <td>約30-50名</td>
+        </tr>
+        <tr>
+          <th>カテゴリー</th>
+          <td>AI Video Interview（業界最古参）</td>
+          <td>Talent Intelligence Platform</td>
+          <td>Interview Intelligence（カテゴリー創造者）</td>
+          <td>AI Smart Interviewer（Chat型）</td>
+          <td>Agentic AI Recruitment</td>
+        </tr>
+        <tr class="row-highlight">
+          <th>一体型/分離型</th>
+          <td class="cell-type"><b>準一体型</b><br>面接＋アセスメント＋自動化の3層スイート</td>
+          <td class="cell-type"><b>完全一体型</b><br>採用＋社内異動＋人材開発の全LC</td>
+          <td class="cell-type"><b>分離型</b><br>→Zoom配下で一体化進行中</td>
+          <td class="cell-type"><b>準分離型</b><br>チャット面接特化＋前段スクリーニング</td>
+          <td class="cell-type"><b>準一体型</b><br>既存ATS上にエージェント層を載せる</td>
+        </tr>
+        <tr class="row-highlight">
+          <th>コンテキスト統合度</th>
+          <td>低〜中（標準質問＋スコアリング、職種ライブラリ依存）</td>
+          <td>高（Skills Cloud＋10億プロファイル＋キャリア軌跡予測）</td>
+          <td>中（面接録画解析＋AI質問サジェスト、組織コンテキスト浅め）</td>
+          <td>中〜高（NLPで候補者個別文脈抽出、職種別カスタムは弱め）</td>
+          <td>中（「承認/スキップ」学習で組織Fit学習＝Reinforcement型）</td>
+        </tr>
+        <tr>
+          <th>主力顧客</th>
+          <td>Fortune 100の60%（大量採用エンプラ）</td>
+          <td>5,000名超のグローバルエンプラ（製薬／製造／IT）</td>
+          <td>エンプラ＋テック中堅（Greenhouse、Zapier、Canva、Ramp）</td>
+          <td>大量応募の小売／コールセンター／新卒（Qantas、Woolworths）</td>
+          <td>中堅テック／人材紹介エージェンシー（Fiverr等）</td>
+        </tr>
+        <tr>
+          <th>コアメッセージ</th>
+          <td>"Hire at speed, quality, and scale with an end-to-end platform that focuses on people first"</td>
+          <td>"The first AI suite built specifically for talent / Skills-first, deep learning powered"</td>
+          <td>"The #1 Interview Intelligence platform / Your interview copilot"</td>
+          <td>"The world's first AI Smart Interviewer / Hire faster, fairer, at scale"</td>
+          <td>"Take Hiring Personally / An autonomous AI agent that watches how your team hires"</td>
+        </tr>
+        <tr>
+          <th>料金</th>
+          <td>非公開／$35K〜$145K+/年（平均$49K、実装費$15-40K）</td>
+          <td>非公開／$150K〜$500K+/年（$7-10 PEPM）</td>
+          <td>非公開／$15K〜$100K+/年（シート×インタビュー量）</td>
+          <td>非公開（推定エンプラ$50K+/年）</td>
+          <td>非公開／"non-seat-based"を明言＝組織全員にデプロイ可能</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- =========================
+     §2 各社の詳細
+     ========================= -->
+<section>
+  <h2><span class="sec-num">§2</span> 各社の詳細</h2>
+  <div class="sec-lead">タブで5社を切替（印刷時は全て展開）。</div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="c1">HireVue</button>
+    <button class="tab-btn" data-tab="c2">Eightfold</button>
+    <button class="tab-btn" data-tab="c3">BrightHire</button>
+    <button class="tab-btn" data-tab="c4">Sapia.ai</button>
+    <button class="tab-btn" data-tab="c5">Perfect</button>
+  </div>
+
+  <!-- C1 HireVue -->
+  <div class="tab-panel active" id="c1" data-print-title="2.1 HireVue（米国・グローバル最大手）">
+    <div class="company-head">
+      <div class="name">HireVue</div>
+      <div class="tag">米国・グローバル最大手 / 2004年創業 / AI Video Interview</div>
+    </div>
+    <div class="company-quick">
+      <div class="qbox"><div class="qlabel">調達額</div><div class="qvalue">$93M〜$390M</div></div>
+      <div class="qbox"><div class="qlabel">タイプ</div><div class="qvalue">準一体型（3層スイート）</div></div>
+      <div class="qbox"><div class="qlabel">主力顧客</div><div class="qvalue">Fortune 100の60%</div></div>
+      <div class="qbox"><div class="qlabel">料金</div><div class="qvalue">$35K〜$145K+/年</div></div>
+    </div>
+    <div class="company-body">
+      <p>2004年創業の最古参。Fortune 100の60%が導入する事実上のデファクト。プラットフォーム構造は「Interviewing × Assessments × Automation」の3層で、<b>ATSは持たないが採用ジャーニーの中盤（応募〜内定前まで）は丸ごと握る準一体型</b>。料金は$35K〜$145K+/年、平均$49K、実装費$15-40K、複数年契約必須。</p>
+      <div class="pull-msg">Hire at speed, quality, and scale with an end-to-end platform that focuses on people first</div>
+      <p>コンテキストは「標準質問×職種ライブラリ×AIスコアリング」のテンプレート型で、組織・候補者固有の文脈統合は深くない。FedRAMP認証・多言語・多ブランドが強みで、<b>「大量×標準化×ガバナンス」の象限を独占</b>。日本市場では未進出に近いが、CaseMatchが目指すTier③エンプラ中途とはICPが異なる（HireVueは新卒・大量採用に強い）ため<b>正面衝突は薄い</b>。</p>
+    </div>
+  </div>
+
+  <!-- C2 Eightfold -->
+  <div class="tab-panel" id="c2" data-print-title="2.2 Eightfold（米国・Talent Intelligence Platform）">
+    <div class="company-head">
+      <div class="name">Eightfold</div>
+      <div class="tag">米国・Talent Intelligence Platform / 2016年創業</div>
+    </div>
+    <div class="company-quick">
+      <div class="qbox"><div class="qlabel">調達額</div><div class="qvalue">$410M（Series F）</div></div>
+      <div class="qbox"><div class="qlabel">タイプ</div><div class="qvalue">完全一体型（全LC）</div></div>
+      <div class="qbox"><div class="qlabel">主力顧客</div><div class="qvalue">5,000名超エンプラ</div></div>
+      <div class="qbox"><div class="qlabel">料金</div><div class="qvalue">$150K〜$500K+/年</div></div>
+    </div>
+    <div class="company-body">
+      <p>2016年創業、累計$410M調達のメガベンチャー。<b>完全一体型の極致</b>で、採用（Talent Acquisition）＋社内異動（Internal Mobility）＋人材開発（Talent Management）＋キャリア計画まで全ライフサイクルをカバー。10億プロファイル×100万スキル×特許ディープラーニングで「スキルアジャセンシー（隣接スキル）」を予測するTalent Intelligence Platformを標榜。</p>
+      <div class="pull-msg">The first AI suite built specifically for talent / Skills-first, deep learning powered</div>
+      <p>料金$150K〜$500K+/年（$7-10 PEPM）、ICPは5,000名超のエンプラ。<b>コンテキスト統合度は5社中最高</b>だが、それは「スキルグラフ」のコンテキストであり、CaseMatchが目指す「面接1回ごとのコンテキスト深堀り」とは方向性が異なる。むしろ参考にすべきは<b>"プラットフォーム化のレバー設計"（スキルクラウド＝ロックイン装置）</b>。</p>
+    </div>
+  </div>
+
+  <!-- C3 BrightHire -->
+  <div class="tab-panel" id="c3" data-print-title="2.3 BrightHire（米国・Interview Intelligence Pioneer）">
+    <div class="company-head">
+      <div class="name">BrightHire</div>
+      <div class="tag">米国・Interview Intelligence Pioneer / 2019年創業 / 2025/11 Zoom買収</div>
+    </div>
+    <div class="company-quick">
+      <div class="qbox"><div class="qlabel">調達額</div><div class="qvalue">$36M → Zoom買収</div></div>
+      <div class="qbox"><div class="qlabel">タイプ</div><div class="qvalue">分離型→Zoom配下で一体化進行</div></div>
+      <div class="qbox"><div class="qlabel">主力顧客</div><div class="qvalue">Greenhouse, Zapier, Canva, Ramp</div></div>
+      <div class="qbox"><div class="qlabel">料金</div><div class="qvalue">$15K〜$100K+/年</div></div>
+    </div>
+    <div class="company-body">
+      <p>2019年創業、"Interview Intelligence"カテゴリーの創造者。Greenhouse、Zapier、Canva、Ramp、Intercom等のテック企業に300社以上導入。コアは「面接録画×AI要約×質問サジェスト×構造化スコア」の<b>分離型ポイントソリューション</b>。<b>2025年11月にZoomが買収完了</b>——これが今回最大の業界シグナル。</p>
+      <div class="pull-msg">The #1 Interview Intelligence platform / Your interview copilot</div>
+      <p>単体カテゴリーとして6年で頂点に立ったが、最終的に大手プラットフォームに統合される運命をたどった。料金$15K〜$100K+/年、シート×インタビュー量の二軸課金。<b>CaseMatchの方針「シート課金しない」はBrightHireの逆張り</b>になる。コンテキスト統合は「面接単体の構造化」止まりで、組織・職種・候補者背景の縦統合は浅い。<b>CaseMatchが踏み込むべき余白は「面接単体でなくジャーニー全体のコンテキストを束ねるUI」</b>——これがD案ナラティブの核になる。</p>
+    </div>
+  </div>
+
+  <!-- C4 Sapia.ai -->
+  <div class="tab-panel" id="c4" data-print-title="2.4 Sapia.ai（※指示書の「Siera」該当・豪州拠点）">
+    <div class="company-head">
+      <div class="name">Sapia.ai <span style="font-size:12px;color:var(--red);font-weight:600;">（※「Siera」該当）</span></div>
+      <div class="tag">豪州メルボルン / 旧PredictiveHire / 2018年 / AI Smart Interviewer</div>
+    </div>
+    <div class="company-quick">
+      <div class="qbox"><div class="qlabel">調達額</div><div class="qvalue">非公開（推定$20M+）</div></div>
+      <div class="qbox"><div class="qlabel">タイプ</div><div class="qvalue">準分離型（Chat型）</div></div>
+      <div class="qbox"><div class="qlabel">主力顧客</div><div class="qvalue">Qantas, Woolworths（小売/CC）</div></div>
+      <div class="qbox"><div class="qlabel">独自性</div><div class="qvalue">5-7問×NLP個別文脈抽出</div></div>
+    </div>
+    <div class="company-body">
+      <p style="background:var(--red-bg);padding:10px 14px;border-radius:5px;border-left:3px solid var(--red);font-size:12.5px;"><b>重要訂正：</b>「Siera」というAI面接プロダクトは公開情報上存在せず（SIERA.AIはフォークリフト企業／Sierra.aiはカスタマーサービスAI）。「コンテキスト軸AI面接で急成長」という言及内容に最も近いのは<b>Sapia.ai</b>（旧PredictiveHire、豪州メルボルン）。</p>
+      <p style="margin-top:12px;">チャット型（音声・動画でなくテキスト）でバイアス除去を打ち出す独自路線。<b>5-7問のオープン質問×NLPで候補者の個別文脈を抽出</b>するアプローチは、CaseMatchの「コンテキスト面接」最も近い思想。</p>
+      <div class="pull-msg">The world's first AI Smart Interviewer / Hire faster, fairer, at scale</div>
+      <p>Qantas、Woolworths等の大量応募×小売／コールセンター職種が主力で完了率98%・候補者満足度96%を訴求。2024年にGen AI "Saige™"を投入。<b>カテゴリー命名権を取りに行く動きはCaseMatch「コンテキスト面接」と同じ戦略</b>。SM経由言及の「Siera」がもしSapiaなら、<b>CaseMatchの最も近い参照プレイヤー</b>として要ウォッチ。</p>
+    </div>
+  </div>
+
+  <!-- C5 Perfect -->
+  <div class="tab-panel" id="c5" data-print-title="2.5 Perfect / GoPerfect（※指示書の「Hire Glow」該当・イスラエル）">
+    <div class="company-head">
+      <div class="name">Perfect / GoPerfect <span style="font-size:12px;color:var(--red);font-weight:600;">（※「Hire Glow」該当）</span></div>
+      <div class="tag">イスラエル・Tel Aviv / 2023年創業 / Agentic AI Recruitment</div>
+    </div>
+    <div class="company-quick">
+      <div class="qbox"><div class="qlabel">調達額</div><div class="qvalue">$23M Seed（2025/2）</div></div>
+      <div class="qbox"><div class="qlabel">タイプ</div><div class="qvalue">準一体型（ATS上のエージェント層）</div></div>
+      <div class="qbox"><div class="qlabel">主力顧客</div><div class="qvalue">Fiverr等の中堅テック</div></div>
+      <div class="qbox"><div class="qlabel">独自性</div><div class="qvalue">承認/スキップで組織Fit学習</div></div>
+    </div>
+    <div class="company-body">
+      <p style="background:var(--red-bg);padding:10px 14px;border-radius:5px;border-left:3px solid var(--red);font-size:12.5px;"><b>重要訂正：</b>「Hire Glow」という名称のイスラエル発エージェンティックHRプロダクトは公開情報上未発見（HireGlow.coは別物の求職者向けCV添削ツール）。「イスラエル発エージェンティックHR」で最も該当性が高いのは<b>Perfect（GoPerfect）</b>、2023年Tel Aviv創業、2025/2に$23M Seed調達。</p>
+      <div class="pull-msg" style="margin-top:14px;">Take Hiring Personally / An autonomous AI agent that watches how your team hires</div>
+      <p><b>「承認/スキップの行動から組織のFit定義を学習する」Reinforcement Learning型コンテキスト統合</b>が独自性。既存ATS上にエージェント層を載せる準一体型で、<b>"non-seat-based"を明示</b>（組織全員にデプロイ可能）——CaseMatchの「シート課金しない」方針と思想が一致する貴重な前例。Fiverr等が顧客。3倍返信率・80%手動工数削減を訴求。<b>CaseMatchが学ぶべきは「行動データからのFit学習」という第3軸のコンテキスト</b>（候補者文脈／組織文脈／"採用判断の蓄積"文脈）。</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     §3 CaseMatchへの示唆
+     ========================= -->
+<section>
+  <h2><span class="sec-num">§3</span> CaseMatchへの示唆</h2>
+  <div class="sec-lead">5社地形図から導いた4方針。ナラティブ4案（A/B/C/D）への反映ポイント付き。</div>
+
+  <div class="impl-grid">
+    <div class="impl-card tone-green">
+      <h3>① 一体型 vs 分離型：「半一体型（コア=面接、接点=API）」推奨</h3>
+      <p>5社の地形図を読むと、<b>完全分離型は買収される運命</b>（BrightHire→Zoom）、<b>完全一体型は$400M級の資金勝負</b>（Eightfold）。HireVue／Sapia／Perfectの3社が示すのは「面接コアを軸に、前後業務との接点をAPI/エージェントで握る」第3の道。<b>CaseMatchは"面接特化"を維持しつつ、JD設計／フィードバック自動生成の2点だけ接点を持つ</b>設計が現実的。シート課金しない方針はPerfectが既に実証済み。</p>
+    </div>
+
+    <div class="impl-card tone-blue">
+      <h3>② コンテキスト統合：3軸の中間を取る</h3>
+      <ul>
+        <li><b>Eightfold</b>＝スキルグラフ（横軸）</li>
+        <li><b>Sapia</b>＝候補者個別文脈（縦軸）</li>
+        <li><b>Perfect</b>＝判断履歴の学習（時間軸）</li>
+      </ul>
+      <p style="margin-top:8px;"><b>CaseMatchの「ナレッジグラフUI」は3軸を1画面で束ねる位置に立てる</b>——これが他4社にない明確な余白。</p>
+    </div>
+
+    <div class="impl-card tone-red">
+      <h3>③ 警戒すべき競合：Sapia ≫ Perfect ＞ BrightHire(Zoom)</h3>
+      <ul>
+        <li><b>Sapia</b>は思想・カテゴリー命名権獲得戦略がCaseMatchと真正面から重なる</li>
+        <li><b>Perfect</b>は「non-seat-based」「行動学習Fit」が日本展開した瞬間にCaseMatchの差別化を侵食</li>
+        <li><b>BrightHire×Zoom</b>はZoom会議経由で日本の中堅エンプラに自動配信される脅威</li>
+      </ul>
+    </div>
+
+    <div class="impl-card tone-gold">
+      <h3>④ ナラティブ4案（A/B/C/D）への反映</h3>
+      <ul>
+        <li><b>D案「コンテキスト面接の第2世代」を本命に</b>。第1世代=標準化(HireVue)／構造化(BrightHire)、第2世代=コンテキスト統合(CaseMatch)と位置づけ</li>
+        <li>A〜C案に<b>「BrightHireのZoom買収」</b>をエンプラ向け脅威として追加——"買収されない構造"のストーリーを補強</li>
+        <li>カテゴリー名「コンテキスト面接」は<b>日本語名称の先取りで国内市場のカテゴリー命名権を確保</b>する戦略は妥当</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     §3.5 日本版Eightfold（逆方向縦統合）
+     ========================= -->
+<section>
+  <h2><span class="sec-num">§3.5</span> 日本版Eightfold — 逆方向の縦統合で空白ポジションを取る</h2>
+  <div class="sec-lead">プロダクト構造として最も近いのはEightfold。ただし同方向ではなく、面接発の"逆向きランプ"で同じプラットフォームを描く。</div>
+
+  <!-- 逆方向ランプ -->
+  <div class="ramp-block">
+    <h3>同じプラットフォーム、登る方向が逆</h3>
+    <p class="lead">
+      Eightfoldは<b>Talent Intelligence発（上）</b>で面接に降りてきてる。CaseMatchは<b>面接コンテキスト発（下）</b>で組織活用に登っていく。
+      到達点（採用→社内異動→人材開発の縦統合）は同じだが、登り方が違う。
+      しかも<b>日本ではこの方向の縦統合プレイヤーが不在</b>——だから取りに行ける。
+    </p>
+
+    <div class="ramp-flow">
+      <div class="ramp-side eight">
+        <div class="ramp-label">海外プラットフォーム型</div>
+        <h4>Eightfold（上から降りる）</h4>
+        <div class="layer start">● Talent Intelligence（スキルグラフ）</div>
+        <div class="layer">● 人材開発・社内異動</div>
+        <div class="layer">● 採用全体</div>
+        <div class="layer">● 面接（2026/4 AI Interview Companion）</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--red);">↓ 後発で面接に降りてきた</div>
+      </div>
+
+      <div class="ramp-arrow">
+        ⇅
+        <div class="label">SAME<br>PLATFORM</div>
+      </div>
+
+      <div class="ramp-side cmatch">
+        <div class="ramp-label">CaseMatch（提案）</div>
+        <h4>面接発の逆方向ランプ</h4>
+        <div class="layer start">● 面接コンテキスト（深掘り×ナレッジグラフUI）</div>
+        <div class="layer">● JD設計／フィードバック自動生成（接点API）</div>
+        <div class="layer">● オンボーディング設計シート（フェーズ1）</div>
+        <div class="layer">● タレマネSaaS接点（フェーズ2／カオナビ/タレパレ/HRMOS）</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--green);">↑ 面接から組織活用に登っていく</div>
+      </div>
+    </div>
+
+    <div class="ramp-stats">
+      <div class="ramp-stat">
+        <div class="label">Eightfold 調達</div>
+        <div class="value">$410M</div>
+        <div class="sub">Series E（2021/6）</div>
+      </div>
+      <div class="ramp-stat">
+        <div class="label">バリュエーション</div>
+        <div class="value">$2.1B</div>
+        <div class="sub">2021/6時点 / プレIPO</div>
+      </div>
+      <div class="ramp-stat">
+        <div class="label">従業員</div>
+        <div class="value">約281名</div>
+        <div class="sub">グローバル</div>
+      </div>
+      <div class="ramp-stat">
+        <div class="label">ARR推定</div>
+        <div class="value">$100M+</div>
+        <div class="sub">エンプラ$150K-500K/年</div>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:var(--footer-gray);margin-top:14px;line-height:1.6;">
+      <b style="color:var(--navy);">含意：</b>「日本版Eightfold」を**最終形**として描き、足元は面接コンテキスト軸の深掘り＋ナレッジグラフUIロックイン。
+      いきなりEightfold型を目指すと$400M級の資金勝負ゾーンに突入してしまうので、<b>面接発の縦統合という"独自の登り方"を貫く</b>のが現実解。
+      Eightfoldのスキルグラフは横軸（隣接性）、CaseMatchは深さ軸（個別ジャーニー）で<b>粒度が違うため共存可能</b>。
+    </p>
+  </div>
+
+  <!-- 国内ポジショニングマップ -->
+  <div class="posmap-wrap">
+    <div class="posmap-title">国内ポジショニングマップ — 「面接コンテキスト深さ」×「入社後カバレッジ」</div>
+    <div class="posmap-sub">2軸で見ると、右上ゾーン（深いコンテキスト × 組織活用一気通貫）は国内空白。海外でも Eightfold / Phenom / Beamery の3社のみ。</div>
+
+    <div class="posmap">
+      <!-- Axis labels -->
+      <div class="axis-x-label">入社後カバレッジ →</div>
+      <div class="axis-tip left">面接止まり</div>
+      <div class="axis-tip right">組織活用 一気通貫</div>
+
+      <div class="axis-y-label">面接コンテキスト深さ →</div>
+      <div class="axis-tip top-y">深い</div>
+      <div class="axis-tip bottom-y">浅い</div>
+
+      <!-- Gap zone (右上空白) -->
+      <div class="gap-zone" style="top:5%; right:5%; width:40%; height:35%;"></div>
+      <div class="gap-label" style="top:8%; right:10%;">★ 国内空白 = CaseMatch狙い</div>
+
+      <!-- CaseMatch target -->
+      <div class="dot-player target" style="top:18%; left:78%;">CaseMatch（目標）</div>
+
+      <!-- Foreign players -->
+      <div class="dot-player foreign" style="top:28%; left:88%;">Eightfold</div>
+      <div class="dot-player foreign" style="top:38%; left:80%;">Phenom</div>
+      <div class="dot-player foreign" style="top:46%; left:75%;">Beamery</div>
+      <div class="dot-player foreign" style="top:22%; left:32%;">Sapia.ai</div>
+      <div class="dot-player foreign" style="top:35%; left:25%;">Perfect</div>
+      <div class="dot-player foreign" style="top:58%; left:22%;">BrightHire</div>
+      <div class="dot-player foreign" style="top:72%; left:35%;">HireVue</div>
+
+      <!-- JP players -->
+      <div class="dot-player jp" style="top:62%; left:68%;">HRMOS（採用→労務）</div>
+      <div class="dot-player jp" style="top:75%; left:82%;">カオナビ</div>
+      <div class="dot-player jp" style="top:82%; left:78%;">タレントパレット</div>
+      <div class="dot-player jp" style="top:88%; left:60%;">SmartHR</div>
+      <div class="dot-player jp" style="top:60%; left:18%;">PeopleX</div>
+      <div class="dot-player jp" style="top:72%; left:10%;">VARIETAS</div>
+      <div class="dot-player jp" style="top:85%; left:12%;">ROXX</div>
+    </div>
+
+    <div class="posmap-legend">
+      <span><span class="lg-dot lg-target"></span>CaseMatch（目標ポジション）</span>
+      <span><span class="lg-dot lg-foreign"></span>海外プレイヤー</span>
+      <span><span class="lg-dot lg-jp"></span>国内プレイヤー</span>
+      <span><span class="lg-dot lg-gap"></span>国内空白ゾーン</span>
+    </div>
+
+    <div class="conclusion-box" style="margin-top:18px;">
+      <h4>3つの実感ポイント</h4>
+      <ul>
+        <li><b>プロダクト構造としては Eightfold が最も近い</b>——「面接→組織活用」を同じプラットフォームで縦統合してる海外勢は Eightfold / Phenom / Beamery の3社、全て累計$300M+調達</li>
+        <li><b>HireVue / BrightHire は別レーン</b>——大量採用・面接単体止まりで、CaseMatchが目指すポジションには到達してない</li>
+        <li><b>国内で右上を取りに行ってるプレイヤーはいない</b>——HRMOS は採用→労務の流通連続性で「面接コンテキスト発」ではない。カオナビ／タレパレは入社後専業。国内AI面接勢（PeopleX/VARIETAS/ROXX）は左下に固まる。<b>右上空白は CaseMatch が取りに行ける</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     §6 追加深掘り
+     ========================= -->
+<section>
+  <h2><span class="sec-num">§6</span> 追加深掘り（5/23 ユーザー追加論点）</h2>
+  <div class="sec-lead">タブで4論点を切替（印刷時は全て展開）。</div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="d1">6.1 AI面接×コンテキスト</button>
+    <button class="tab-btn" data-tab="d2">6.2 入社後まで紐付け</button>
+    <button class="tab-btn" data-tab="d3">6.3 CaseMatchへの示唆(追加)</button>
+    <button class="tab-btn" data-tab="d4">6.4 日本市場の確認</button>
+  </div>
+
+  <!-- 6.1 -->
+  <div class="tab-panel active" id="d1" data-print-title="6.1 論点1: AI面接 × コンテキスト">
+    <p style="font-size:13px;margin-bottom:14px;"><b style="color:var(--navy);">問い：</b>コンテキストを評価軸に統合してる海外プレイヤーは何社いるか？</p>
+    <table class="inner-table">
+      <thead>
+        <tr><th style="width:160px;">プレイヤー</th><th style="width:140px;">"context" 明示度</th><th>具体的メッセージ・実装</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sapia.ai</td>
+          <td>中（技術用語レベル）</td>
+          <td>"Smart Interviewer" カテゴリーは押すが、Hero/メッセージで "contextual interview" は<b>未使用</b>。技術用語として "InterviewBERT が言葉の <b>contextual meaning</b> を理解" "question-aware, <b>multi-context</b> outlier detection" を打ち出す。<b>カテゴリー名としては不採用、内部アルゴリズム説明としては採用</b></td>
+        </tr>
+        <tr>
+          <td>Perfect / GoPerfect</td>
+          <td>中（機能語レベル）</td>
+          <td>"contextual matching" を機能説明で使用（"AI recruiters interpret the <b>full context</b> of what you're looking for—skills, career patterns, growth signals"）。ただしカテゴリー名は "Agentic AI Recruitment"、Hero は "Take Hiring Personally"。<b>コンテキスト＝ソーシング側の機能語であり面接の軸ではない</b></td>
+        </tr>
+        <tr>
+          <td>Eightfold</td>
+          <td>高（プラットフォーム軸）</td>
+          <td>"Talent Intelligence" "Skills Graph"（16億プロファイル×160万スキル）。<b>ただしこれは「スキル隣接性のコンテキスト」であり、面接1回ごとの組織×候補者×職種コンテキストではない</b>。2026年4月に AI Interview Companion をローンチし「役割×スキル×ドメイン」の文脈統合に踏み込み開始</td>
+        </tr>
+        <tr>
+          <td>Maki People</td>
+          <td>中（音声技術レベル）</td>
+          <td>"<b>context-aware</b> voice technology"（ElevenLabsとの統合）を打ち出すが、これは「会話の声色文脈」レベル。"Choose your <b>hiring context</b> and get a tailored agent stack" と機能説明では使用するが、カテゴリー命名では使わず</td>
+        </tr>
+        <tr>
+          <td>Metaview</td>
+          <td>低</td>
+          <td>"deep <b>role understanding</b>" "competency-tagged" で構造化は強いが、"context" は前面に出さない</td>
+        </tr>
+        <tr>
+          <td>HireVue / BrightHire / Karat / Plum.io / Pymetrics</td>
+          <td>ほぼゼロ</td>
+          <td>標準質問×スコアリング型／面接録画解析型／心理測定型で、コンテキストを軸にしたメッセージなし</td>
+        </tr>
+        <tr>
+          <td>その他観測</td>
+          <td>—</td>
+          <td>Training Magazine 寄稿で "<b>Context-Aware AI</b> can help move from 'Is this candidate good?' to 'Is this candidate good for us, here, and now?'" という業界トレンド記事は存在。ただし<b>特定プレイヤーがカテゴリーとして打ち出してる事例ではない</b>（コンセプト先行・命名空白）</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="conclusion-box">
+      <h4>結論</h4>
+      <ul>
+        <li><b>「コンテキスト面接」「Contextual Interview」をカテゴリー名として明示してるプレイヤーは観測した範囲でゼロ</b>（Sapia は "Smart Interviewer"、Perfect は "Agentic AI"、Eightfold は "Talent Intelligence" がカテゴリー名）</li>
+        <li>コンテキストは<b>技術用語・機能語としては各社が使い始めてるが、カテゴリー旗としては誰も握ってない</b></li>
+        <li><b>CaseMatchの「コンテキスト面接」カテゴリーは取りに行ける余白あり</b>（日本市場・グローバル市場ともに命名権が空いてる）</li>
+        <li>ただし<b>業界記事レベルでは "context-aware hiring" がトレンドワード化し始めてる</b>（Training Magazine等）ため、命名権獲得は<b>今後12-24ヶ月の時間勝負</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 6.2 -->
+  <div class="tab-panel" id="d2" data-print-title="6.2 論点2: 入社後まで紐付け">
+    <p style="font-size:13px;margin-bottom:14px;"><b style="color:var(--navy);">問い：</b>面接コンテキスト→入社後オンボーディング・評価・活躍を一気通貫で持つプレイヤーは何社いるか？</p>
+    <table class="inner-table">
+      <thead>
+        <tr><th style="width:160px;">プレイヤー</th><th>入社後カバレッジ</th><th style="width:200px;">一気通貫度</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Eightfold</td><td>TA＋Internal Mobility＋Talent Management＋Resource Management＋Workforce Exchange の<b>全LC</b>。2026/4 に AI Interview Companion と Career Coach 系エージェント連携、Oracle Recruiting Cloud に組込み開始</td><td><b>★★★★★（完全一気通貫）</b><br>16億キャリア軌跡×160万スキルが面接データ→キャリア成長に直結</td></tr>
+        <tr><td>Phenom People</td><td>"X+ Ontologies" でスキル・役割・候補者・社員を<b>統一グラフ化</b>。面接フィードバックがオンボーディングワークフローに直接連携</td><td><b>★★★★☆（高い）</b><br>"hire faster, develop better, retain longer" を公式メッセージで明示</td></tr>
+        <tr><td>Beamery</td><td>"Talent Lifecycle Management Platform" でソーシング→エンゲージメント→オンボーディング→開発まで一体化。2026 に "Ray" エージェントで自動ワークフォース計画</td><td><b>★★★★☆（高い）</b></td></tr>
+        <tr><td>Gloat</td><td>Career Coach Agent で「個別キャリア成長会話」を生成。タレントマーケットプレイス起点</td><td>★★★☆☆（社内異動寄り）<br>面接コンテキスト起点ではない</td></tr>
+        <tr><td>SAP SuccessFactors</td><td>2026/1H リリースで SmartRecruiters × Employee Central × Onboarding の<b>ネイティブ統合</b>を発表。「candidate through new hire」連続体験を打ち出す</td><td>★★★★☆（HCM軸）<br>"面接コンテキスト"でなく"応募者データ"の連携</td></tr>
+        <tr><td>Workday</td><td>HCM＋Talent Management統合済。面接→オンボーディング→パフォーマンス管理まで単一プラットフォーム</td><td>★★★★☆（HCM軸）</td></tr>
+        <tr><td>Greenhouse</td><td>オンボーディングモジュールあり（コアATSと別売）。HRIS連携豊富（Workday、BambooHR、Rippling）</td><td>★★★☆☆（ATS拡張型）</td></tr>
+        <tr><td>Ashby</td><td>Workday 双方向同期20分間隔、Rippling 自動プロビジョニング</td><td>★★★☆☆（ATS拡張型）</td></tr>
+        <tr><td>Lever</td><td>"digital offer letters まで"。HR ワークフロー連続性は別ツール必要</td><td>★★☆☆☆（ATS止まり）</td></tr>
+        <tr><td>HireVue / BrightHire / Sapia / Perfect / Karat</td><td>面接特化／<b>入社後カバレッジなし</b></td><td>★☆☆☆☆（面接止まり）</td></tr>
+      </tbody>
+    </table>
+    <div class="conclusion-box">
+      <h4>結論</h4>
+      <ul>
+        <li><b>「面接コンテキスト→入社後活躍」を一気通貫で公式に打ち出してるのは Eightfold / Phenom / Beamery の3社</b>（いずれも累計$300M超の大型プレイヤー）</li>
+        <li><b>AI面接プロダクト発で入社後まで踏み込んでるプレイヤーはゼロ</b>——上記3社は「Talent Intelligence Platform発で面接にも降りてきた」逆方向の進化</li>
+        <li><b>SAP / Workday は HCM 起点で「応募者データ→従業員データ」の連続性</b>を持つが、"面接コンテキスト" を独自軸として持たない</li>
+        <li><b>CaseMatchが入社後まで踏み込むなら、ベンチマークは Eightfold ＋ Phenom ＋ Beamery の3社</b>。ただしこの3社は全て<b>プラットフォーム化＝資金勝負ゾーン</b>（$300M+）</li>
+        <li><b>AI面接発×入社後活躍は未開拓</b>——CaseMatchが「ナレッジグラフUI」で第一号になる余白あり。ただし狭い余白（5年以内にEightfoldが面接側から完全降りてくる可能性高）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 6.3 -->
+  <div class="tab-panel" id="d3" data-print-title="6.3 CaseMatchへの示唆（追加3点）">
+    <div class="impl-grid" style="grid-template-columns:1fr;">
+      <div class="impl-card tone-gold">
+        <h3>① 「コンテキスト面接」カテゴリー命名権は今が最後のタイミング</h3>
+        <p>Sapia の "Smart Interviewer"、Perfect の "Agentic AI Recruitment"、Eightfold の "Talent Intelligence" と同じ並びに <b>"Contextual Interview" / "コンテキスト面接"を立てる</b>。Training Magazine 等が業界トレンドワード化を始めてる（"context-aware hiring"）ため、<b>12-24ヶ月以内に英語圏でも誰かがカテゴリー宣言する可能性大</b>。日本語名称の先行と、英語名称 "Contextual Interview Platform" の同時押さえを推奨。</p>
+      </div>
+      <div class="impl-card tone-blue">
+        <h3>② 「入社後まで握る」は二段構え推奨</h3>
+        <p><b>フェーズ1</b> = 「面接コンテキスト→入社後3ヶ月のオンボーディング設計シート自動生成」のみ（ナレッジグラフUIで完結、データ流通APIなし）。<b>フェーズ2</b> = 「タレマネSaaS（カオナビ/タレントパレット/HRMOS）との接点API」だけ握る。<b>いきなりEightfold型を目指さない</b>（資金桁違い・本丸のAI面接コンテキスト軸を失う）。</p>
+      </div>
+      <div class="impl-card tone-red">
+        <h3>③ Eightfold「AI Interview Companion」（2026/4ローンチ）が最大の脅威</h3>
+        <p>Talent Intelligence Platform 側から面接コンテキストに<b>逆侵食</b>してきてる。Oracle Recruiting Cloud に組込み開始＝<b>日本のエンプラ採用システムにEightfold経由で自動配信される脅威が現実化</b>。BrightHire×Zoom と並ぶ二大注意シグナル。5/24定例で「<b>BrightHire/Zoom＋Eightfold/Oracle の二重脅威</b>」として共有を推奨。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6.4 -->
+  <div class="tab-panel" id="d4" data-print-title="6.4 日本市場の確認">
+    <p style="font-size:13px;margin-bottom:14px;"><b style="color:var(--navy);">仮説：</b>「コンテキスト面接 × 入社後紐付け」は日本にはまだない？ → <b style="color:var(--green);">YES（国内ゼロ）</b></p>
+    <table class="inner-table">
+      <thead>
+        <tr><th style="width:200px;">プレイヤー</th><th>状態</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>HRMOS（ビズリーチ）</b></td><td>2026年に「HRMOS労務」を正式リリース。HRMOS採用×HRMOSタレントマネジメント×HRMOS労務で<b>「採用評価情報→従業員DB→オンボーディング」の一気通貫</b>を打ち出し中。ただし"面接コンテキスト"を独自軸とせず、標準項目の連続性レベル。<b>国内では最も一気通貫に近い</b></td></tr>
+        <tr><td><b>SmartHR</b></td><td>TMSモジュール（ARR 50億円規模）でHRMOS採用／カオナビ／タレントパレット等と連携。<b>SmartHR自身は労務SaaS発で、面接コンテキスト発ではない</b></td></tr>
+        <tr><td><b>カオナビ / タレントパレット</b></td><td>カオナビ ARR 90億円規模 / タレントパレット ARR 101億円規模。タレマネ専業で、<b>入社後の人材データ管理が本丸</b>。AI面接プロダクト連携は受け側のポジション。"コンテキスト面接"の概念なし</td></tr>
+        <tr><td><b>国内AI面接プロダクト<br>（PeopleX / VARIETAS / ROXX Zcareer 等）</b></td><td>比較記事で「AI面接で得たデータを入社後パフォーマンスと照合・分析」ユースケースは語られるが、<b>カテゴリーとしての「コンテキスト面接×入社後活躍」を打ち出してるプレイヤーは確認できる範囲ではゼロ</b></td></tr>
+      </tbody>
+    </table>
+    <div class="conclusion-box">
+      <h4>結論</h4>
+      <ul>
+        <li><b>国内で「コンテキスト面接 × 入社後紐付け」をカテゴリーとして打ち出してるプレイヤーは確認できる範囲では存在しない</b></li>
+        <li>HRMOSが最も近いが「採用→労務」の流通連続性であり、「面接コンテキスト→入社後活躍」の意味的連続性ではない</li>
+        <li><b>CaseMatchが両方を同時に握りに行くなら、国内では最初のプレイヤー</b>になれる</li>
+        <li>ただし<b>タレマネSaaS（カオナビ/タレパレ/HRMOS）の方が顧客基盤×データ蓄積で先行</b>しており、彼らが「コンテキスト面接」概念を逆輸入してきた時の防御策（特許／ナレッジグラフUIの独自性／コンテキスト深堀りデータ蓄積）を5/24定例の中期論点に置く価値あり</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     §5 名称訂正メモ
+     ========================= -->
+<section>
+  <div class="alert-section">
+    <h3>⚠ §5 名称訂正メモ（5/24定例で説明用）</h3>
+    <table class="inner-table">
+      <thead>
+        <tr><th style="width:120px;">指示書での名称</th><th style="width:160px;">実在確認</th><th style="width:180px;">該当プロダクト</th><th>訂正理由</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>Siera</b></td><td>❌ AI面接プロダクトとして存在しない</td><td><b>Sapia.ai</b>（豪州）を該当として記述</td><td>SIERA.AI=フォークリフト企業／Sierra.ai=カスタマーサービスAI（採用プロダクトなし）。「コンテキスト軸AI面接で急成長」の言及内容と最も合致するのはSapia.ai</td></tr>
+        <tr><td><b>Hire Glow</b></td><td>❌ イスラエル発エージェンティックHRとして存在しない</td><td><b>Perfect / GoPerfect</b>（Tel Aviv）を該当として記述</td><td>HireGlow.co=求職者向けCV添削ツール（イスラエル発でもない）。「イスラエル発エージェンティックHR」言及と完全一致するのはPerfect</td></tr>
+      </tbody>
+    </table>
+    <p class="note">→ SM経由の伝聞で名前が変質している可能性が高い。5/24定例で松本CEO／山室に<b>「もとの情報ソース」確認推奨</b>。</p>
+  </div>
+</section>
+
+<!-- =========================
+     §4 ソース一覧（折りたたみ）
+     ========================= -->
+<section style="padding:0;background:none;box-shadow:none;">
+  <details class="sources">
+    <summary>§4 ソース一覧（クリックで展開）</summary>
+    <div class="sources-body">
+
+      <h4>HireVue</h4>
+      <ul>
+        <li><a href="https://www.hirevue.com/" target="_blank">HireVue公式</a></li>
+        <li><a href="https://www.pin.com/blog/hirevue-pricing/" target="_blank">HireVue Pricing 2026 - Pin</a></li>
+        <li><a href="https://www.willo.video/blog/hirevue-review" target="_blank">HireVue Review 2026 - Willo Blog</a></li>
+        <li><a href="https://tracxn.com/d/companies/hirevue/__PeMrputcdA2VOkFKx0ff0NX85_cSCaYi7B2wCL8qA6Y" target="_blank">HireVue Tracxn Profile</a></li>
+        <li><a href="https://www.cbinsights.com/company/hirevue/financials" target="_blank">HireVue CB Insights</a></li>
+        <li><a href="https://www.hirevue.com/platform" target="_blank">HireVue Platform</a></li>
+      </ul>
+
+      <h4>Eightfold</h4>
+      <ul>
+        <li><a href="https://eightfold.ai/" target="_blank">Eightfold公式</a></li>
+        <li><a href="https://eightfold.ai/talent-intelligence-platform/" target="_blank">Eightfold Talent Intelligence Platform</a></li>
+        <li><a href="https://www.pin.com/blog/eightfold-pricing/" target="_blank">Eightfold Pricing 2026 - Pin</a></li>
+        <li><a href="https://tracxn.com/d/companies/eightfold/__Od4V-9kHfBdB85DLrrTpQUWw8VZh_yPTJMIpXWVPMJ4" target="_blank">Eightfold Tracxn Profile</a></li>
+        <li><a href="https://www.gartner.com/reviews/product/eightfold-talent-intelligence-platform" target="_blank">Eightfold Gartner Peer Insights</a></li>
+      </ul>
+
+      <h4>BrightHire</h4>
+      <ul>
+        <li><a href="https://brighthire.com/" target="_blank">BrightHire公式</a></li>
+        <li><a href="https://www.g2.com/products/brighthire/reviews" target="_blank">BrightHire G2 Reviews 2026</a></li>
+        <li><a href="https://www.vendr.com/marketplace/brighthire" target="_blank">BrightHire Pricing - Vendr</a></li>
+        <li><a href="https://www.inflection.cx/blog/zoom-acquires-brighthire/" target="_blank">Zoom Acquires BrightHire (2025/11) - Inflection</a></li>
+        <li><a href="https://brighthire.com/blog/brighthire-series-a/" target="_blank">BrightHire Series A Announcement</a></li>
+        <li><a href="https://www.crunchbase.com/organization/brighthire" target="_blank">BrightHire Crunchbase</a></li>
+      </ul>
+
+      <h4>Sapia.ai（「Siera」該当）</h4>
+      <ul>
+        <li><a href="https://sapia.ai/" target="_blank">Sapia.ai公式</a></li>
+        <li><a href="https://sapia.ai/sapia-ai-recruitment-software/" target="_blank">Sapia AI Smart Interviewer Product</a></li>
+        <li><a href="https://sapia.ai/candidate-explainer/" target="_blank">Sapia Chat Interview Explainer</a></li>
+        <li><a href="https://sapia.ai/resources/blog/making-our-smart-interviewer-even-smarter-with-gen-ai/" target="_blank">Sapia × Generative AI Saige Blog</a></li>
+        <li><a href="https://www.sap.com/products/hcm/partners/sapiaco-pty-ltd-sapiaai-smart-interviewer.html" target="_blank">Sapia SAP Partner Page</a></li>
+        <li><a href="https://sapia.ai/resources/blog/introducing-interviewbert-a-world-first-algorithm-for-better-interviews/" target="_blank">Sapia InterviewBERT Blog</a></li>
+        <li><a href="https://sapia.ai/resources/blog/question-aware-outlier-answer-detection-for-fairer-ai-scoring-of-interviews/" target="_blank">Sapia Question-aware Multi-context Outlier Detection</a></li>
+      </ul>
+
+      <h4>Perfect / GoPerfect（「Hire Glow」該当）</h4>
+      <ul>
+        <li><a href="https://www.goperfect.com/" target="_blank">GoPerfect公式</a></li>
+        <li><a href="https://www.prnewswire.com/news-releases/perfect-raises-23m-in-seed-funding-to-tackle-recruitment-bottlenecks-with-pioneering-agentic-ai-302384672.html" target="_blank">Perfect $23M Seed Press Release - PRNewswire</a></li>
+        <li><a href="https://techcrunch.com/2025/02/25/perfect-taps-23m-to-fix-the-flaws-in-recruitment-with-ai/" target="_blank">Perfect TechCrunch</a></li>
+        <li><a href="https://finder.startupnationcentral.org/company_page/perfect" target="_blank">Perfect Startup Nation Central</a></li>
+        <li><a href="https://www.staffingindustry.com/news/global-daily-news/agentic-ai-recruiting-provider-perfect-lands-a-23m-funding-round" target="_blank">Staffing Industry Analysts Perfect Coverage</a></li>
+        <li><a href="https://www.goperfect.com/blog/recruiter-ai-complete-guide-to-ai-powered-hiring-in-2026" target="_blank">GoPerfect Recruiter AI Complete Guide 2026</a></li>
+      </ul>
+
+      <h4>§6 追加深掘りソース</h4>
+      <ul>
+        <li><a href="https://www.globenewswire.com/news-release/2026/04/08/3270327/0/en/Eightfold-AI-Expands-Talent-Agents-Across-the-Full-Interview-Journey-Introducing-AI-Interview-Companion-and-New-Interview-Capabilities.html" target="_blank">Eightfold AI Interview Companion Launch 2026/4</a></li>
+        <li><a href="https://eightfold.ai/blog/oracle-eightfold-enterprise-hiring-agent/" target="_blank">Eightfold × Oracle Recruiting Cloud Integration</a></li>
+        <li><a href="https://eightfold.ai/products/" target="_blank">Eightfold Talent Intelligence Platform Products</a></li>
+        <li><a href="https://www.makipeople.com/product-overview" target="_blank">Maki People Product Overview</a></li>
+        <li><a href="https://elevenlabs.io/blog/maki-people" target="_blank">Maki People × ElevenLabs Context-Aware Voice</a></li>
+        <li><a href="https://www.phenom.com/" target="_blank">Phenom Applied AI</a></li>
+        <li><a href="https://www.gartner.com/reviews/market/candidate-relationship-management-crm-software/vendor/beamery/product/beamery-talent-lifecycle-management-platform" target="_blank">Beamery Talent Lifecycle Management - Gartner</a></li>
+        <li><a href="https://www.knowlee.ai/blog/ai-talent-intelligence" target="_blank">AI Talent Intelligence: Eightfold/Beamery/Gloat 2026 - Knowlee</a></li>
+        <li><a href="https://news.sap.com/2026/04/sap-successfactors-1h-2026-release/" target="_blank">SAP SuccessFactors 1H 2026 Release</a></li>
+        <li><a href="https://www.outsail.co/post/greenhouse-vs-lever-vs-ashby" target="_blank">Greenhouse vs Lever vs Ashby 2026 - Outsail</a></li>
+        <li><a href="https://www.pin.com/blog/best-ashby-integrations/" target="_blank">Best Ashby Integrations 2026 - Pin</a></li>
+        <li><a href="https://trainingmag.com/smarter-hiring-how-context-aware-ai-can-help-make-better-talent-decisions/" target="_blank">Smarter Hiring: Context-Aware AI - Training Magazine</a></li>
+        <li><a href="https://note.com/hrgyokaibunseki/n/n7dd4ddf53eca" target="_blank">タレマネSaaS四強の現在地2030年展望 - note</a></li>
+        <li><a href="https://prtimes.jp/main/html/rd/p/000000116.000127310.html" target="_blank">HRMOS労務リリース PR TIMES</a></li>
+        <li><a href="https://rpm.zeku.co.jp/column/ai-interview-comparison" target="_blank">AI面接サービス比較9選 2026 - zeku</a></li>
+        <li><a href="https://gxo.co.jp/column/talent-management-kaonavi-hrmos-comparison-2026" target="_blank">タレントマネジメント比較 GXO 2026</a></li>
+      </ul>
+
+      <h4>補足ソース（カテゴリー俯瞰）</h4>
+      <ul>
+        <li><a href="https://aisera.com/blog/ai-recruiting/" target="_blank">AI Recruitment 2026 - Aisera</a></li>
+        <li><a href="https://www.aihr.com/blog/ai-agents-for-recruiting/" target="_blank">Top 9 AI Agents for Recruiting - AIHR</a></li>
+        <li><a href="https://sierra.ai/blog/the-ai-native-interview" target="_blank">Sierra AI-native Interview Blog</a>（参考：自社採用刷新の参考事例）</li>
+      </ul>
+
+    </div>
+  </details>
+</section>
+
+<footer>
+  CaseMatch / Foreign Product Research — Internal use only / Sources are all publicly available
+</footer>
+
+<script>
+  document.querySelectorAll('.tabs').forEach(tabs => {
+    const buttons = tabs.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.tab;
+        const parentSection = tabs.parentElement;
+        parentSection.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        parentSection.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const panel = parentSection.querySelector('#' + targetId);
+        if (panel) panel.classList.add('active');
+      });
+    });
+  });
+</script>
+</body>
+</html>

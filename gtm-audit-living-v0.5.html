@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="referrer" content="no-referrer">
+<title>CaseMatch GTM Audit — Living Document v0.5</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --navy-dark: #122749;
+    --navy-light: #2A4F8A;
+    --gold: #B8860B;
+    --gold-bg: #FFF7E5;
+    --gold-bg-strong: #FFE9B0;
+    --green: #1B5E20;
+    --green-bg: #E8F5E9;
+    --orange: #EF6C00;
+    --orange-bg: #FFF3E0;
+    --red: #C62828;
+    --red-bg: #FFEBEE;
+    --gray: #6B7280;
+    --gray-bg: #F5F5F5;
+    --border: #E0E5EE;
+    --text: #1A1A2E;
+    --bg: #FAFAFA;
+    --paper: #FAF7F2;
+    --accent-blue: #1976D2;
+    --teal: #00796B;
+    --light-subtitle: #C9D8EF;
+
+    --diff-add-bg: #E6F4EA;
+    --diff-add-border: #2E7D32;
+    --diff-del-bg: #FCE8E6;
+    --diff-del-border: #C62828;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
+    color: var(--text);
+    line-height: 1.55;
+    background: var(--bg);
+    padding: 24px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: white;
+    padding: 22px 28px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+  }
+  header .eyebrow { font-size: 11px; color: #C9D8EF; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  header .sub { font-size: 13px; color: #C9D8EF; margin-bottom: 10px; }
+  header .meta { display: flex; gap: 22px; font-size: 12px; color: #94B4D4; flex-wrap: wrap; }
+  header .meta b { color: white; font-weight: 600; }
+
+  /* Cover */
+  .cover {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 36px 48px 32px;
+    margin-bottom: 26px;
+    position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #E8E1D0;
+  }
+  .cover .corner-tl { position: absolute; top: 18px; left: 22px; font-size: 10px; color: var(--navy); letter-spacing: 1.5px; font-weight: 700; }
+  .cover .corner-tr { position: absolute; top: 18px; right: 28px; font-size: 11px; color: var(--gray); font-style: italic; font-family: Georgia, serif; }
+  .cover .corner-br { position: absolute; bottom: 12px; right: 24px; font-size: 10px; color: var(--gray); font-style: italic; font-family: Georgia, serif; }
+  .cover h2.cover-title { font-size: 30px; color: var(--navy); font-weight: 400; margin: 18px 0 28px; letter-spacing: -0.3px; font-family: Georgia, "Hiragino Mincho ProN", serif; }
+  .cover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 18px; }
+  .cover-block { background: white; border: 1.5px solid var(--navy); border-radius: 6px; padding: 18px 22px; }
+  .cover-block h3 { font-size: 17px; color: var(--navy); font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .cover-block ul { list-style: none; padding: 0; }
+  .cover-block ul li { display: flex; align-items: center; gap: 10px; padding: 7px 6px; font-size: 13.5px; color: var(--text); cursor: pointer; border-radius: 4px; transition: background 0.12s; }
+  .cover-block ul li:hover { background: var(--gold-bg); }
+  .cover-block ul li .li-num { font-weight: 700; color: var(--navy); min-width: 22px; text-align: right; }
+  .cover-block ul li .li-text { flex: 1; }
+  .li-status { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .li-status.confirmed { background: var(--green); }
+  .li-status.progress { background: var(--orange); }
+  .li-status.pending { background: #CCC; }
+  .cover-block ul li .li-ver { font-size: 10px; color: var(--gray); font-weight: 600; background: var(--gray-bg); padding: 1px 6px; border-radius: 3px; }
+  .cover-crossblock { background: white; border: 1.5px solid var(--navy); border-radius: 6px; padding: 12px 22px; display: flex; align-items: center; gap: 14px; font-size: 13.5px; cursor: pointer; transition: background 0.12s; }
+  .cover-crossblock:hover { background: var(--gold-bg); }
+  .cover-crossblock .li-num { font-weight: 700; color: var(--navy); min-width: 22px; }
+  .cover-crossblock .li-text { flex: 1; font-weight: 600; color: var(--navy); }
+  .cover-crossblock .li-ver { font-size: 10px; color: var(--gray); font-weight: 600; background: var(--gray-bg); padding: 1px 6px; border-radius: 3px; }
+
+  .legend { background: white; border-radius: 8px; padding: 12px 18px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); display: flex; gap: 22px; flex-wrap: wrap; align-items: center; font-size: 12px; }
+  .legend .title { font-weight: 700; color: var(--navy); letter-spacing: 0.5px; text-transform: uppercase; font-size: 10.5px; }
+  .legend .item { display: flex; align-items: center; gap: 6px; color: var(--text); }
+  .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .legend .dot.confirmed { background: var(--green); }
+  .legend .dot.progress { background: var(--orange); }
+  .legend .dot.pending { background: var(--gray); }
+
+  .section-heading { font-size: 14px; color: var(--navy); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin: 26px 0 14px; padding-left: 8px; border-left: 4px solid var(--navy); }
+
+  .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .tile { background: white; border-radius: 10px; padding: 16px 18px; cursor: pointer; border: 2px solid var(--border); transition: all 0.18s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .tile:hover { border-color: var(--navy); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(27,58,107,0.15); }
+  .tile.confirmed { border-left: 4px solid var(--green); }
+  .tile.progress { border-left: 4px solid var(--orange); }
+  .tile.pending { border-left: 4px solid var(--gray); opacity: 0.7; }
+  .tile .head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .tile .num { font-size: 10px; color: var(--gray); letter-spacing: 1px; font-weight: 700; }
+  .tile .ver { font-size: 10px; background: var(--navy); color: white; padding: 2px 7px; border-radius: 3px; font-weight: 700; }
+  .tile.confirmed .ver { background: var(--green); }
+  .tile.progress .ver { background: var(--orange); }
+  .tile.pending .ver { background: var(--gray); }
+  .tile h3 { font-size: 15px; color: var(--navy); font-weight: 700; margin-bottom: 6px; }
+  .tile .summary { font-size: 12px; color: var(--text); line-height: 1.55; margin-bottom: 10px; min-height: 38px; }
+  .tile .footer-meta { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--gray); padding-top: 8px; border-top: 1px dashed var(--border); }
+  .tile .footer-meta .hcount { font-weight: 700; color: var(--navy); }
+
+  .detail-section { background: white; border-radius: 12px; padding: 0; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; display: none; border-top: 4px solid var(--navy); }
+  .detail-section.active { display: block; }
+  .detail-section.confirmed { border-top-color: var(--green); }
+  .detail-section.progress { border-top-color: var(--orange); }
+  .detail-section.pending { border-top-color: var(--gray); }
+
+  .detail-head { padding: 18px 24px; background: linear-gradient(180deg, #F8FAFC 0%, white 100%); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .detail-head .title-block .num { font-size: 10px; color: var(--gray); letter-spacing: 1.5px; font-weight: 700; }
+  .detail-head h2 { font-size: 20px; color: var(--navy); font-weight: 700; margin-top: 4px; }
+  .detail-head .close-btn { background: none; border: 1.5px solid var(--gray); color: var(--gray); padding: 5px 14px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer; }
+  .detail-head .close-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .current-card { margin: 20px 24px; padding: 20px 24px; background: var(--green-bg); border: 2px solid var(--green); border-radius: 10px; position: relative; }
+  .detail-section.progress .current-card { background: var(--orange-bg); border-color: var(--orange); }
+  .detail-section.pending .current-card { background: var(--gray-bg); border-color: var(--gray); }
+  .current-card .badge { position: absolute; top: -10px; left: 18px; background: var(--green); color: white; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 4px; letter-spacing: 1px; }
+  .detail-section.progress .current-card .badge { background: var(--orange); }
+  .detail-section.pending .current-card .badge { background: var(--gray); }
+  .current-card .ver-info { display: flex; gap: 14px; font-size: 11px; color: var(--gray); margin-bottom: 10px; flex-wrap: wrap; }
+  .current-card .ver-info b { color: var(--text); font-weight: 700; }
+  .current-card .title-text { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .current-card .statement { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 12px; }
+
+  /* === LEVEL 3 RICH VIEW === */
+  .rich-wrap { margin: 0 24px 20px; }
+  .rich-toggle {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-bg) 0%, var(--gold-bg-strong) 100%);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 14px 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    transition: all 0.15s;
+  }
+  .rich-toggle:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(184,134,11,0.2); }
+  .rich-toggle .arrow { transition: transform 0.2s; }
+  .rich-toggle.open .arrow { transform: rotate(90deg); }
+  .rich-content {
+    display: none;
+    margin-top: 14px;
+    padding: 20px;
+    background: var(--paper);
+    border: 1px solid #E8E1D0;
+    border-radius: 10px;
+  }
+  .rich-content.open { display: block; }
+  .rich-section-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; letter-spacing: 0.5px; }
+  .rich-section { margin-bottom: 22px; }
+  .rich-section:last-child { margin-bottom: 0; }
+
+  /* TIER grid (ICP) */
+  .tier-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+  .tier-card { border: 2px solid var(--border); border-radius: 8px; padding: 14px 16px; background: white; position: relative; }
+  .tier-card.hero { border-color: var(--gold); background: var(--gold-bg); }
+  .tier-card.tier1 { border-color: var(--green); }
+  .tier-card .badge { position: absolute; top: -10px; left: 14px; background: var(--navy); color: white; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px; }
+  .tier-card.hero .badge { background: var(--gold); }
+  .tier-card.tier1 .badge { background: var(--green); }
+  .tier-card .label { font-size: 10.5px; color: var(--gray); margin-top: 4px; font-weight: 600; letter-spacing: 0.5px; }
+  .tier-card h4 { font-size: 14px; color: var(--navy); font-weight: 700; margin: 6px 0 8px; }
+  .tier-card.hero h4 { color: var(--gold); }
+  .tier-card.tier1 h4 { color: var(--green); }
+  .tier-card .companies { font-size: 11.5px; color: var(--text); line-height: 1.55; margin-bottom: 6px; }
+  .tier-card .strategy { font-size: 11px; color: var(--gray); padding-top: 8px; border-top: 1px dashed var(--border); margin-top: 6px; }
+
+  /* Persona grid */
+  .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .persona { background: white; border: 1px solid var(--border); border-left: 4px solid var(--navy); border-radius: 8px; padding: 12px 14px; }
+  .persona.t3 { border-left-color: var(--gold); background: var(--gold-bg); }
+  .persona.t1 { border-left-color: var(--green); }
+  .persona.t2 { border-left-color: var(--gray); background: #FAFAFA; }
+  .persona-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+  .persona-head .tier-tag { font-size: 9.5px; font-weight: 700; color: white; background: var(--navy); padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px; }
+  .persona.t3 .tier-tag { background: var(--gold); }
+  .persona.t1 .tier-tag { background: var(--green); }
+  .persona.t2 .tier-tag { background: var(--gray); }
+  .persona-head .role { font-size: 10px; font-weight: 700; color: var(--red); background: #FFE5E5; padding: 2px 6px; border-radius: 3px; }
+  .persona-head .name { font-size: 13.5px; font-weight: 700; color: var(--navy); }
+  .persona.t3 .persona-head .name { color: var(--gold); }
+  .persona-head .title { font-size: 11px; color: var(--gray); }
+  .persona-body .row { margin-bottom: 6px; font-size: 11.5px; }
+  .persona-body .row b { color: var(--navy); }
+  .persona-body .msg { background: var(--light-subtitle); padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; color: var(--navy); border-left: 2px solid var(--navy); margin-top: 6px; }
+  .persona.t3 .msg { background: var(--gold-bg-strong); border-left-color: var(--gold); color: #5B4500; }
+
+  /* Narrative legend (4 boxes) */
+  .narrative-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .narr-box { background: white; border-radius: 8px; padding: 12px 14px; border-left: 3px solid var(--navy); }
+  .narr-box.gold { border-left-color: var(--gold); background: var(--gold-bg); }
+  .narr-box.green { border-left-color: var(--green); background: var(--green-bg); }
+  .narr-box h4 { font-size: 13px; color: var(--navy); font-weight: 700; margin-bottom: 4px; }
+  .narr-box.gold h4 { color: var(--gold); }
+  .narr-box.green h4 { color: var(--green); }
+  .narr-box p { font-size: 11.5px; color: var(--text); line-height: 1.5; }
+  .narr-box .ag { font-size: 10.5px; color: var(--gray); margin-top: 4px; }
+
+  /* Category 3 layers */
+  .category-layers { display: flex; flex-direction: column; gap: 8px; max-width: 600px; margin: 0 auto; }
+  .layer-row { background: white; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+  .layer-row.market { border-color: var(--gray); }
+  .layer-row.category { border-color: var(--gold); background: var(--gold-bg); }
+  .layer-row.positioning { border-color: var(--navy); background: #F0F4FA; }
+  .layer-row .lname { font-size: 12px; font-weight: 700; color: var(--navy); }
+  .layer-row.category .lname { color: var(--gold); }
+  .layer-row .ltext { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  /* Sales pitch leaves */
+  .leaf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .leaf-mini { background: white; border-left: 4px solid var(--navy); border-radius: 6px; padding: 10px 12px; }
+  .leaf-mini.hero { border-left-color: var(--gold); background: var(--gold-bg); }
+  .leaf-mini .pri { font-size: 10px; font-weight: 700; color: var(--orange); margin-bottom: 4px; letter-spacing: 0.5px; }
+  .leaf-mini.hero .pri { color: var(--gold); }
+  .leaf-mini .lname { font-size: 12.5px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .leaf-mini.hero .lname { color: var(--gold); }
+  .leaf-mini .core { font-size: 11px; color: var(--text); line-height: 1.5; }
+  .leaf-mini .core b { color: var(--navy); }
+
+  /* ROI formula */
+  .roi-formula { background: white; padding: 16px 18px; border-radius: 10px; border: 2px solid var(--green); margin-bottom: 14px; }
+  .roi-formula .ftitle { font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 1px; margin-bottom: 6px; }
+  .roi-formula .fstep { display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 600; color: var(--text); padding: 6px 0; }
+  .roi-formula .fstep .arr { color: var(--green); font-weight: 700; }
+  .roi-formula .fstep b { color: var(--green); }
+
+  /* Competitor table */
+  .comp-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: 11.5px; }
+  .comp-table th { background: var(--navy); color: white; text-align: left; padding: 10px 12px; font-weight: 700; font-size: 11px; letter-spacing: 0.3px; }
+  .comp-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr:hover { background: var(--paper); }
+  .comp-table .cname { font-weight: 700; color: var(--navy); }
+  .comp-table .weak { color: var(--red); }
+
+  /* Link to external */
+  .external-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--navy); color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; margin-top: 14px; transition: background 0.15s; }
+  .external-link:hover { background: var(--navy-light); }
+  .external-link::after { content: "↗"; }
+
+  /* Timeline / History (継承) */
+  .timeline-wrap { padding: 0 24px; margin-bottom: 20px; }
+  .timeline-wrap .label, .history-wrap .label { font-size: 10.5px; font-weight: 700; color: var(--gray); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+  .timeline { display: flex; align-items: center; gap: 0; position: relative; padding: 14px 8px; background: #F8FAFC; border-radius: 8px; overflow-x: auto; }
+  .timeline .node { flex: 0 0 auto; text-align: center; cursor: pointer; min-width: 110px; padding: 0 6px; position: relative; }
+  .timeline .node:not(:last-child)::after { content: ""; position: absolute; top: 22px; right: -50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
+  .timeline .node .circle { width: 18px; height: 18px; border-radius: 50%; background: white; border: 3px solid var(--gray); margin: 0 auto 8px; position: relative; z-index: 1; transition: transform 0.15s; }
+  .timeline .node:hover .circle { transform: scale(1.2); }
+  .timeline .node.current .circle { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 4px var(--green-bg); }
+  .timeline .node .ver { font-size: 11px; font-weight: 700; color: var(--navy); }
+  .timeline .node.current .ver { color: var(--green); }
+  .timeline .node .date { font-size: 9.5px; color: var(--gray); margin-top: 2px; }
+
+  .history-wrap { padding: 0 24px 24px; }
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .history-item { border: 1.5px solid var(--border); border-radius: 8px; background: white; overflow: hidden; transition: border-color 0.15s; }
+  .history-item:hover { border-color: var(--navy-light); }
+  .history-item.open { border-color: var(--navy); }
+  .history-summary { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .history-summary .left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+  .history-summary .ver-tag { font-size: 11px; font-weight: 700; color: white; background: var(--navy); padding: 3px 9px; border-radius: 3px; flex-shrink: 0; }
+  .history-summary .date-tag { font-size: 11px; color: var(--gray); flex-shrink: 0; }
+  .history-summary .title-text { font-size: 13px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-summary .toggle { font-size: 16px; color: var(--gray); transition: transform 0.2s; flex-shrink: 0; }
+  .history-item.open .history-summary .toggle { transform: rotate(90deg); color: var(--navy); }
+  .history-detail { display: none; padding: 16px 18px; background: #FAFBFC; border-top: 1px dashed var(--border); }
+  .history-item.open .history-detail { display: block; }
+
+  .history-block { margin-bottom: 14px; }
+  .history-block:last-child { margin-bottom: 0; }
+  .history-block .blabel { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: var(--gray); text-transform: uppercase; margin-bottom: 6px; }
+  .history-block .btext { font-size: 12.5px; color: var(--text); line-height: 1.6; padding: 8px 12px; background: white; border-radius: 6px; border-left: 3px solid var(--navy); }
+  .history-block.trigger .btext { border-left-color: var(--orange); }
+  .history-block.why .btext { border-left-color: var(--gold); background: var(--gold-bg); }
+
+  .diff-block { background: white; border-radius: 6px; padding: 10px 12px; font-size: 12px; line-height: 1.65; border: 1px solid var(--border); }
+  .diff-add { background: var(--diff-add-bg); border-left: 3px solid var(--diff-add-border); padding: 4px 8px; margin: 3px 0; border-radius: 3px; color: #1B5E20; }
+  .diff-add::before { content: "+ "; font-weight: 700; }
+  .diff-del { background: var(--diff-del-bg); border-left: 3px solid var(--diff-del-border); padding: 4px 8px; margin: 3px 0; border-radius: 3px; color: var(--red); text-decoration: line-through; }
+  .diff-del::before { content: "− "; font-weight: 700; text-decoration: none; display: inline-block; }
+  .diff-unchanged { padding: 4px 8px; color: var(--gray); font-size: 11.5px; }
+
+  .placeholder-note { margin: 20px 24px; padding: 16px; background: var(--gray-bg); border: 1px dashed var(--gray); border-radius: 8px; text-align: center; font-size: 12.5px; color: var(--gray); }
+  .placeholder-note b { color: var(--navy); }
+
+  /* === PMA Q&A === */
+  .pma-block { background: white; border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+  .pma-block .pma-group-name { font-size: 12px; font-weight: 700; color: var(--navy); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1.5px solid var(--navy); display: flex; align-items: center; gap: 8px; }
+  .pma-block .pma-group-name .gtag { font-size: 9.5px; font-weight: 600; background: var(--navy); color: white; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.5px; }
+  .qna-list { display: flex; flex-direction: column; gap: 8px; }
+  .qna-item { padding: 10px 12px; border-radius: 6px; border-left: 4px solid var(--gray); background: var(--gray-bg); cursor: pointer; transition: all 0.12s; }
+  .qna-item:hover { transform: translateX(2px); }
+  .qna-item.answered { border-left-color: var(--green); background: var(--green-bg); }
+  .qna-item.partial { border-left-color: var(--orange); background: var(--orange-bg); }
+  .qna-item.no_data { border-left-color: var(--gray); background: var(--gray-bg); }
+  .qna-item .qrow { display: flex; align-items: flex-start; gap: 10px; font-size: 12.5px; }
+  .qna-item .qicon { font-size: 14px; flex-shrink: 0; }
+  .qna-item .qtext { flex: 1; font-weight: 600; color: var(--text); line-height: 1.5; }
+  .qna-item .arow { font-size: 11.5px; color: var(--text); line-height: 1.55; padding: 8px 0 0 24px; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 8px; display: none; }
+  .qna-item.open .arow { display: block; }
+  .qna-item .arow b { color: var(--navy); }
+  .qna-item.answered .arow b { color: var(--green); }
+  .qna-item.partial .arow b { color: var(--orange); }
+  .qna-item.no_data .arow b { color: var(--red); }
+  .qna-summary-bar { display: flex; gap: 14px; margin-bottom: 12px; font-size: 11.5px; flex-wrap: wrap; }
+  .qna-stat { padding: 4px 10px; border-radius: 12px; font-weight: 600; }
+  .qna-stat.a { background: var(--green-bg); color: var(--green); }
+  .qna-stat.p { background: var(--orange-bg); color: var(--orange); }
+  .qna-stat.n { background: var(--gray-bg); color: var(--gray); }
+  .pma-methods { background: var(--paper); padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 11.5px; color: var(--gray); border-left: 3px solid var(--gold); }
+  .pma-methods b { color: var(--navy); }
+
+  footer { margin-top: 32px; padding: 14px 20px; text-align: center; color: var(--gray); font-size: 11px; }
+  footer b { color: var(--navy); }
+
+  @media print {
+    .legend, .detail-head .close-btn, .rich-toggle { display: none; }
+    .detail-section, .detail-section.active { display: block; page-break-inside: avoid; }
+    .history-detail, .rich-content { display: block !important; }
+    .tile { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">CaseMatch / GTM Audit — Living Document</div>
+  <h1>GTM Audit Living Doc v0.5 — Questions × CaseMatch回答</h1>
+  <div class="sub">5階層ドリルダウン: 目次 → タイル → CURRENT/Timeline/History → リッチ構造ビュー → ★ Questions×答え</div>
+  <div class="meta">
+    <span><b>Client:</b> CaseMatch</span>
+    <span><b>Last Updated:</b> 2026-05-24</span>
+    <span><b>Version:</b> v0.5 prototype</span>
+    <span><b>Source:</b> Go-to-market audit 全Questions / CaseMatch全成果物</span>
+  </div>
+</header>
+
+<div class="cover">
+  <div class="corner-tl">BLUE WONDER CONSULTING (準拠)</div>
+  <div class="corner-tr">GTM audit</div>
+  <h2 class="cover-title">The 10 key elements of a GTM audit</h2>
+  <div class="cover-grid">
+    <div class="cover-block">
+      <h3>Foundation</h3>
+      <ul id="foundationList"></ul>
+    </div>
+    <div class="cover-block">
+      <h3>Execution</h3>
+      <ul id="executionList"></ul>
+    </div>
+  </div>
+  <div class="cover-crossblock" id="crossItem"></div>
+  <div class="corner-br">CaseMatch GTM Audit Living Doc · 2026-05-24</div>
+</div>
+
+<div class="legend">
+  <span class="title">凡例:</span>
+  <span class="item"><span class="dot confirmed"></span>確定</span>
+  <span class="item"><span class="dot progress"></span>進行中</span>
+  <span class="item"><span class="dot pending"></span>未着手</span>
+  <span class="item" style="margin-left:auto;color:var(--gray);">目次番号 / タイル → 詳細展開 / リッチ詳細トグル → 構造化ビュー</span>
+</div>
+
+<div class="section-heading">Foundation — 戦略の土台</div>
+<div class="tile-grid" id="foundationTiles"></div>
+
+<div class="section-heading">Execution — 実行</div>
+<div class="tile-grid" id="executionTiles"></div>
+
+<div class="section-heading">Cross-cutting — 横断</div>
+<div class="tile-grid" id="crossTiles"></div>
+
+<div id="detailContainer"></div>
+
+<footer>
+  <b>CaseMatch GTM Audit Living Doc v0.5</b> · 10要素 × Questions×回答 × 5階層ドリルダウン · 2026-05-24
+</footer>
+
+<script>
+/* ============ DATA ============ */
+const gtmAudit = {
+  metadata: { client: "CaseMatch", lastUpdated: "2026-05-24" },
+  categories: [
+    /* ===== 01. ICP & Personas ===== */
+    {
+      id: "icp", num: "01", group: "foundation",
+      name: "ICP & Personas",
+      status: "confirmed",
+      summary: "Tier③エンプラ集中＋ペルソナ4種確立（田中/鈴木/佐藤/中村）",
+      current: {
+        version: "v2.0", date: "2026-04-19",
+        title: "ターゲット③ 大規模日系エンプラ最優先 + 4ペルソナ",
+        statement: "Tier③（NTT/富士通/NEC/アクセンチュア/大手商社・金融・メーカー本社）を最優先。Tier①既存実績維持のみ、Tier②保留。アタックリスト783社。ペルソナ4種=田中（最有望/商社中途企画M）/鈴木（チャンピオン/大手ITHRBP）/佐藤（Tier①コンサル）/中村（Tier②保留）",
+        source: "4/19 ICP決定定例 / バトルカードv3"
+      },
+      history: [{
+        version: "v1.0", date: "2026-04前半",
+        title: "全Tier並行アプローチ（初期仮説）",
+        trigger: "GTM Audit Q2初期版",
+        statement: "Tier①〜③並行アプローチ。実績ベースでTier①コア軸。",
+        why_changed: "リソース分散しすぎ → 中途ハイクラスでVARIETAS差別化可能なTier③にリソース集中",
+        diff: [
+          { type: "del", text: "Tier①〜③を並行アプローチ" },
+          { type: "add", text: "Tier③集中、Tier①維持のみ、Tier②保留" },
+          { type: "add", text: "アタックリスト783社確定" },
+          { type: "add", text: "ペルソナ4種を明文化（田中/鈴木/佐藤/中村）" }
+        ]
+      }],
+      richType: "icp_personas",
+      pmaQuestions: {
+        methods: "CRM分析 / 社内サーベイ・インタビュー（オンボーディング/マーケ/プロダクト/CS/営業）/ Win/Loss分析 / SDRアウトリーチ分析",
+        groups: [
+          { name: "マーケティング", questions: [
+            { q: "イベント・広告・コンテンツ・リードは、定義されたICP／ターゲットペルソナに整合しているか？", status: "no_data", answer: "イベント/広告/コンテンツ未着手（チャネル戦略=Pending）。代理店ルートのみ存在。" },
+            { q: "社内ドキュメント（ICP・ペルソナ）は、他チームの認識と一致しているか？", status: "partial", answer: "4/19 ICP決定定例で合意済。バトルカードv3にペルソナ統合済。社内Webサイトの記述更新は未着手。" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "購買委員会のキーメンバーは、ターゲットペルソナに含まれているか？", status: "answered", answer: "ペルソナ4種で意思決定者（田中/佐藤/中村）×チャンピオン（鈴木）を網羅。" },
+            { q: "ICP案件は、非ICP案件より受注率が高いか？", status: "partial", answer: "Tier①コンサル/IBDは50社超実績で高win rate。Tier③エンプラはこれから検証フェーズ。" },
+            { q: "SDRはターゲットICP／ペルソナへのアウトリーチで成果を出せているか？", status: "no_data", answer: "アタックリスト783社で展開中だが、SDR定量データ（返信率/アポ率）は未整備。" }
+          ]},
+          { name: "カスタマーサクセス", questions: [
+            { q: "ICP顧客は、非ICP顧客よりプロダクト導入が早いか？", status: "no_data", answer: "Time-to-Value指標未定義（Product Adoption=Pending）。" },
+            { q: "ICP顧客はNPS/CSATが非ICPより高いか？", status: "no_data", answer: "NPS/CSAT測定なし。" },
+            { q: "ICP顧客はChurnが低く、Renewal/Upsell/ACVが高いか？", status: "no_data", answer: "Churn理由分類なし。" },
+            { q: "バイヤー・ユーザー・実装担当者は、ターゲットペルソナと一致しているか？", status: "no_data", answer: "実装者ペルソナは未整理。意思決定者×チャンピオンまで。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 02. Problem / Solution ===== */
+    {
+      id: "problem", num: "02", group: "foundation",
+      name: "Problem / Solution",
+      status: "progress",
+      summary: "「中途ハイクラスを既存AI面接で取れない」課題明確化済",
+      current: {
+        version: "v1.0", date: "2026-05-08",
+        title: "中途ハイクラス採用での評価不可能性",
+        statement: "[課題] VARIETAS等の固定10項目AI面接では中途ハイクラスのコンテキスト評価不可。汎用AI面接は大量採用向けで「深さ不足」。[解] 候補者ごとスクラッチ設計＋ナレッジグラフUIで職務適性(P-J fit)を可視化。",
+        source: "5/8 PdM会議"
+      },
+      history: [],
+      richType: "problem_solution",
+      pmaQuestions: {
+        methods: "Win/Loss分析（期待値） / 顧客インタビュー（実態） / プロダクト利用ログ分析",
+        groups: [
+          { name: "問題／ソリューション", questions: [
+            { q: "ICPに対してプロダクトが解決する具体的な課題は何か？（トップ3の痛点）", status: "answered", answer: "①既存AI面接の評価不可能性（VARIETAS固定10項目で中途評価不可） ②汎用AI面接の深さ不足（大量採用向け） ③中途ハイクラスの属人面接（評価バラつき）" },
+            { q: "課題を解決しないと、どんな影響／結果が起きるか？（なぜ重要か）", status: "answered", answer: "アトラクト不足／ミスマッチ／入社後活躍しない／早期離職（特にTier③エンプラの中途）" },
+            { q: "既存の代替手段に対して、自社のソリューションはどう優れているか？", status: "answered", answer: "毎回スクラッチ設計（カスタマイズではない）＋ナレッジグラフUI。固定項目では出ない深さ。" },
+            { q: "この課題を解くことのメリット・価値は？", status: "answered", answer: "通過期待値3倍／既存面接コスト1/3／採用ROI改善／面接官属人化解消" },
+            { q: "このプロダクトで解くことの固有のメリット・価値は？", status: "answered", answer: "50社超実績・シグマクシス420人/INTLOOP推薦度8/10／専門職面接10万件データ" }
+          ]},
+          { name: "プロダクト", questions: [
+            { q: "ユーザーはプロダクトのどこから価値を得ているか？", status: "no_data", answer: "ユーザー価値ポイントの定量分析未着手（Product Adoption=Pending）。" },
+            { q: "プロダクト利用は、社員／見込客／顧客が定義する価値と一致しているか？", status: "no_data", answer: "プロダクト利用ログ分析なし。" },
+            { q: "顧客が評価しているが訴求不足の機能・ベネフィットはあるか？", status: "no_data", answer: "顧客インタビュー未実施。" },
+            { q: "それらはプロダクトロードマップの方向性と整合しているか？", status: "no_data", answer: "ロードマップ整理が未着手。" },
+            { q: "バイヤーが求めるものと、開発しているものにギャップはないか？", status: "no_data", answer: "Win/Loss分析未実施。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 03. Positioning & Messaging ===== */
+    {
+      id: "positioning", num: "03", group: "foundation",
+      name: "Positioning & Messaging",
+      status: "progress",
+      summary: "「コンテキスト面接」カテゴリーで中途ハイクラスに集中。4ナラティブ案＋判定ロジック確立",
+      current: {
+        version: "v3.2", date: "2026-05-23",
+        title: "コンテキスト型AI面接 — 中途ハイクラス専用",
+        statement: "「コンテキスト面接」をカテゴリー名として確立。中途ハイクラス採用での評価可視化が主戦場。VARIETAS（10項目固定/新卒向け）と汎用AI面接（大量採用向け）両方の隙間を取りに行く。4ナラティブ案（A/B/C/D）＋判定ロジックツリー確立済。",
+        source: "5/23 バトルカードv3"
+      },
+      history: [
+        {
+          version: "v1.0", date: "2026-04-19以前",
+          title: "ハイコンテキストAI面接（社内呼称）",
+          trigger: "GTM Audit Q2初期",
+          statement: "「ハイコンテキストAI面接」を訴求軸に。",
+          why_changed: "「ハイコンテキスト」は語感が重く市場に通じづらい",
+          diff: [
+            { type: "del", text: "ハイコンテキストAI面接" },
+            { type: "add", text: "コンテキスト面接（コンテキスト型AI面接）" }
+          ]
+        },
+        {
+          version: "v2.0", date: "2026-05-08",
+          title: "中途ハイクラス専用へフォーカス",
+          trigger: "5/8 PdM会議",
+          statement: "新卒・中途両対応から、中途ハイクラス専用にフォーカス。",
+          why_changed: "Tier③エンプラの多くが新卒VARIETAS済 → 中途差別化が最大の刺さりどころ",
+          diff: [
+            { type: "del", text: "新卒・中途両対応で汎用訴求" },
+            { type: "add", text: "中途ハイクラス採用専用に絞り込み" }
+          ]
+        },
+        {
+          version: "v3.0", date: "2026-05-17",
+          title: "4ナラティブ案（A/B/C/D）整理",
+          trigger: "5/17 定例",
+          statement: "A/B/C/D の4ナラティブ案で分岐。",
+          why_changed: "Tier別／顧客取り組み状況別の訴求が必要",
+          diff: [{ type: "add", text: "A/B/C/D 4ナラティブ案構造" }]
+        },
+        {
+          version: "v3.2", date: "2026-05-23",
+          title: "判定ロジックツリー＋ICP統合",
+          trigger: "5/23 バトルカードv3",
+          statement: "ICP × 取組状況 × 対象 の3軸判定ロジックツリー。A-1新卒VARIETAS型エンプラを★★★最有望ゾーンに。",
+          why_changed: "5/24定例向けに営業現場で即使える判定構造が必要",
+          diff: [
+            { type: "add", text: "ICP × 取組状況 × 対象 の3軸判定ロジックツリー" },
+            { type: "add", text: "A-1リーフを★★★最有望ゾーンに格上げ" }
+          ]
+        }
+      ],
+      richType: "positioning_messaging",
+      pmaQuestions: {
+        methods: "ピッチデック／資料／Web評価 / 社内インタビュー / 10-15件の商談録音分析 / Win/Loss分析",
+        groups: [
+          { name: "マーケ＆セールス", questions: [
+            { q: "提供価値を定義できているか？", status: "answered", answer: "「コンテキスト面接」カテゴリーで定義済。中途ハイクラスでP-J fit可視化。" },
+            { q: "プロダクトの語り方について社内アラインメントが取れているか？", status: "answered", answer: "5/8 PdM会議＋5/17定例で合意。5/23バトルカードv3で固定。「コンテキスト面接OK、ハイコンテキストAI面接NG」言葉ルール化。" },
+            { q: "パッケージング／プライシング戦略は、プロダクトナラティブを支えているか？", status: "partial", answer: "Pricing D案詰め中（5/24定例）。ROI公式は整合済だが具体プランは未確定。" },
+            { q: "マーケチーム全体が、このドキュメントの保管場所を把握しているか？", status: "partial", answer: "Notion/Dropbox整理途中。マーケ部西田さん（Marketo連携待ち）との接続未完了。" },
+            { q: "営業資料・コンテンツ・Webで一貫してポジショニングされているか？", status: "partial", answer: "セールスデックv2/バトルカードv3は整合。Webサイトは旧ポジションのまま、未更新。" },
+            { q: "営業チームは一貫したピッチを持っているか？", status: "answered", answer: "バトルカードv3で標準化。判定ロジック→5リーフで分岐統一。" },
+            { q: "最も成果を出す営業はどんなストーリーを語っているか？", status: "answered", answer: "山室・小野（コンサル経験者）の同業事例ストーリー＝シグマクシス420人/INTLOOPケース。" }
+          ]},
+          { name: "見込客・顧客の認識", questions: [
+            { q: "バイヤーの頭の中で、自社はどんなポジションを占めているか？", status: "partial", answer: "「中途ハイクラス専用」浸透途中。Tier①コンサル界隈は浸透、Tier③エンプラはこれから。" },
+            { q: "ポジショニング／メッセージは明確で差別化されているか？", status: "partial", answer: "VARIETAS差別化軸は明確。汎用AI面接との差別化は要検証。" },
+            { q: "見込客／顧客の認識・体験と合致しているか？", status: "no_data", answer: "顧客調査未実施。Win/Loss分析が残課題。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 04. Pricing & Packaging ===== */
+    {
+      id: "pricing", num: "04", group: "foundation",
+      name: "Pricing & Packaging",
+      status: "progress",
+      summary: "ROI=通過期待値3倍/既存面接コスト1/3。D案詰め中（5/24残論点）",
+      current: {
+        version: "v3.0", date: "2026-05-17",
+        title: "SPI置換型ROI × マーサー型稟議ロジック",
+        statement: "採用ROI公式: 通過期待値3倍 → 既存面接コスト1/3 → 残2/3を頂く。SPI使用企業にはマーサー型ロジックで「SPI予算をそのまま振替」稟議。価格D案（具体プラン）は5/24定例で詰め予定。",
+        source: "5/17 定例 / Pricing_v3"
+      },
+      history: [
+        {
+          version: "v1.0", date: "2026-04-24",
+          title: "ROI/TCO二段構え（初版）",
+          trigger: "ROI_TCO_v3作成",
+          statement: "短期稟議（現場ROI）と長期経営（TCO）の二段構え。",
+          why_changed: "定量根拠が必要 → v3で公式化",
+          diff: [
+            { type: "add", text: "ROI/TCO 二段構え初版" },
+            { type: "add", text: "SPI置換型ロジック（マーサー型）" }
+          ]
+        },
+        {
+          version: "v3.0", date: "2026-05-17",
+          title: "通過期待値3倍式の確立",
+          trigger: "5/17 定例",
+          statement: "「通過期待値3倍 → 面接コスト1/3 → 残り2/3を頂く」公式化。",
+          why_changed: "エンプラ稟議で使える定量根拠が必要",
+          diff: [
+            { type: "add", text: "通過期待値3倍 → 既存コスト1/3 公式" },
+            { type: "add", text: "残り2/3を価格としていただく根拠" }
+          ]
+        }
+      ],
+      richType: "pricing",
+      pmaQuestions: {
+        methods: "競合分析 / 社内インタビュー / 10-15件の商談・CSM通話分析 / Churn分析 / Win/Loss / 顧客インタビュー",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "プライシング／パッケージング／値引きについて、社内に「一つの正解」があるか？", status: "partial", answer: "Pricing v3 PPTXあり。D案（具体プラン）は5/24定例で詰め予定。値引き運用は「事例化と引き換え」ルールのみ。" },
+            { q: "主要ステークホルダーは、プライシング／パッケージングについて同じ理解か？", status: "partial", answer: "5/24定例で詰め予定。現状はROI公式のみ合意。" }
+          ]},
+          { name: "知覚（Perception）", questions: [
+            { q: "選んだバリューメトリクスは、本当に「価値」と相関しているか？", status: "answered", answer: "「通過期待値3倍」=採用成功率に直結する明確な価値メトリクス。" },
+            { q: "プライシングモデルはポジショニングと整合しているか？（例: 取引しやすさ=シンプル価格）", status: "no_data", answer: "D案次第。ハイクラス採用専用＝高単価でも理屈は通るが具体プラン未確定。" },
+            { q: "価格は、見込客／顧客／営業の品質知覚と整合しているか？", status: "no_data", answer: "顧客価格知覚調査（PSM/Van Westendorp等）未実施。" },
+            { q: "価格は競合と比べてどうか？提供価値と整合しているか？", status: "partial", answer: "VARIETAS¥75K/月、HireVue$35K/年、PeopleX¥500/件。CaseMatchはこの中間〜上位帯想定だが正式価格未公開。" }
+          ]},
+          { name: "更新／Churn", questions: [
+            { q: "X%自動値上げを含む、標準化された更新プロセスがあるか？", status: "no_data", answer: "更新プロセス未整備。" },
+            { q: "Churn理由の15%超で、価格が単独／主要因として挙がっているか？", status: "no_data", answer: "Churn理由分類なし。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 05. Competition ===== */
+    {
+      id: "competition", num: "05", group: "foundation",
+      name: "Competition",
+      status: "progress",
+      summary: "国内4社＋海外5社マップ完成。日本版Eightfold逆方向縦統合ポジション特定",
+      current: {
+        version: "v3.0", date: "2026-05-24",
+        title: "国内4社＋海外5社マップ＋日本版Eightfold逆方向縦統合ポジション",
+        statement: "国内: PeopleX / VARIETAS / ROXX / HireVue。海外: HireVue / Eightfold / BrightHire / Sapia.ai / Perfect の5社比較完了。プロダクト構造として最も近いのはEightfold（$410M調達/$2.1Bバリュエーション）だが、『逆方向縦統合』（面接発→組織活用へ登る）で国内空白の右上ポジションを取りに行く戦略を確認。詳細: foreign-product-research HTML。",
+        source: "海外5社リサーチHTML / バトルカードv3 共通弾倉"
+      },
+      history: [
+        {
+          version: "v1.0", date: "2026-04前半",
+          title: "競合3社マップ初版",
+          trigger: "GTM Audit初版",
+          statement: "PeopleX/VARIETAS/HireVueの3社で初版。",
+          why_changed: "ROXXが現場職セグメントで台頭 → 追加",
+          diff: [{ type: "add", text: "ROXX Zcareer追加（現場職/大量採用 = ICP外と明確化）" }]
+        },
+        {
+          version: "v2.0", date: "2026-05-23",
+          title: "4社競合マップ（バトルカード反映）",
+          trigger: "バトルカードv3完成",
+          statement: "PeopleX/VARIETAS/ROXX/HireVue 4社把握、撃ち返しメッセージ完成。",
+          why_changed: "海外プロダクトリサーチが未完で残論点扱い → 5/24定例向けに着手必要",
+          diff: [{ type: "add", text: "撃ち返しメッセージ vs VARIETAS / vs PeopleX を追加" }]
+        }
+      ],
+      richType: "competition",
+      pmaQuestions: {
+        methods: "競合分析 / 社内インタビュー / CRM分析 / Win/Loss / アナリストレポート / SNS・業界フォーラム監視 / 海外プロダクトデスクリサーチ",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "現在および近い将来の最大の脅威について、社内合意はあるか？", status: "answered", answer: "国内: VARIETAS（最重要・新卒ベース）／PeopleX（認知度No.1）／HireVue／ROXX。海外脅威2大注意シグナル: BrightHire×Zoom買収（2025/11）＋ Eightfold×Oracle Recruiting Cloud（2026/4）。5/24定例で共有。" },
+            { q: "それら競合を上回るためのプランがあるか？", status: "answered", answer: "vs VARIETAS = A-1リーフ（中途別物ナラティブ）。vs PeopleX = 深さ訴求。vs Eightfold = 面接発の逆方向縦統合で粒度違い（横軸スキルグラフ vs 深さ軸個別ジャーニー）。バトルカードv3＋海外5社リサーチで対応済。" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業はバトルカード／反論処理コンテンツで武装されており、それは有効か？", status: "answered", answer: "バトルカードv3完成。逆質問切り返し3つ×5リーフ。海外脅威の文脈（買収される運命の分離型 vs 買収されない構造のCaseMatch）も補強。" },
+            { q: "営業／CSとプロダクトの間に、顧客要望を伝える経路があるか？", status: "partial", answer: "山室・小野→PdM直接ルートあり。体系化はこれから。" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "競合は十分に文書化されているか？（ポジ／メッセ／価格／機能／コンテンツ）", status: "answered", answer: "国内4社＋海外5社（HireVue/Eightfold/BrightHire/Sapia.ai/Perfect）でポジ／料金／弱点／コアメッセージ／コンテキスト統合度まで整理完了。さらに§6追加深掘りでMaki People/Phenom/Beamery等を含む計14プレイヤーまで論点別マッピング済。" },
+            { q: "どの競合が各チャネル（イベント／広告／SNS）で最も目立つか？", status: "no_data", answer: "デジタル広告/SEO/イベント露出の競合観測なし。" },
+            { q: "競合はレビューサイト（G2／Capterra／TrustPilot）でどう評価されているか？", status: "partial", answer: "海外5社の G2 / Gartner Peer Insights / Vendr 一次情報まで参照済。国内勢のレビューサイト分析は未実施。" }
+          ]},
+          { name: "更新／Churn", questions: [
+            { q: "Churn会話で最も頻出する競合トップ5は？", status: "no_data", answer: "Churn理由分類なし。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 06. Sales Pitch ===== */
+    {
+      id: "sales_pitch", num: "06", group: "execution",
+      name: "Sales Pitch",
+      status: "progress",
+      summary: "バトルカードv3完成。判定ロジック→5リーフ詳細カードで現場稼働可",
+      current: {
+        version: "v3.0", date: "2026-05-23",
+        title: "ICP × 判定ロジックツリー × 5リーフカード",
+        statement: "ICP冒頭追加＋A/B/Cブランチ＋5詳細カード（A-1/A-2,3/B/C-1/C-2）＋共通弾倉。営業現場で「ICP確認→Q1取組？→Q2対象→該当カードのナラティブ」で動ける構造。",
+        source: "5/23 v3作成"
+      },
+      history: [
+        {
+          version: "v1.0", date: "2026-05-22",
+          title: "4ナラティブ案 静的整理版",
+          trigger: "5/22 初版作成",
+          statement: "A/B/C/D 4ナラティブ案を並列カード形式で整理。",
+          why_changed: "現場判断に委ねると属人化 → 判定ロジック化が必要",
+          diff: [{ type: "add", text: "A/B/C/D 4ナラティブ案 初版" }]
+        },
+        {
+          version: "v2.0", date: "2026-05-22",
+          title: "判定ロジックツリー追加",
+          trigger: "v1へのFB",
+          statement: "Q1→Q2の2段階Q&Aで4ナラティブを自動選択。",
+          why_changed: "営業現場の即時判断支援",
+          diff: [{ type: "add", text: "Q1→Q2のロジックツリー" }]
+        },
+        {
+          version: "v3.0", date: "2026-05-23",
+          title: "ICP統合＋C分岐リッチ化",
+          trigger: "5/24定例直前最終版",
+          statement: "ICP × ペルソナを冒頭追加。C分岐を新卒失敗/中途失敗に2分割。",
+          why_changed: "ICP判断と分岐ロジックの接続を可視化",
+          diff: [
+            { type: "add", text: "ICP × バイヤーペルソナ章を冒頭追加" },
+            { type: "add", text: "C分岐を新卒失敗/中途失敗に2分割" },
+            { type: "add", text: "A-1リーフをHEROゾーンに" }
+          ]
+        }
+      ],
+      richType: "sales_pitch",
+      pmaQuestions: {
+        methods: "ピッチデック／資料／Web評価 / 社内インタビュー / 10-15件の商談録音分析 / Win/Loss分析",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "セールスピッチについて社内合意があるか？", status: "answered", answer: "バトルカードv3で標準化。5/24定例で最終確認予定。" },
+            { q: "経営層／営業／CSM／サポートまで、ピッチの主要要素を共有できているか？", status: "partial", answer: "営業層は揃いつつあり。C-suite/CSM/Supportへの展開はこれから。営業オンボーディング導線未整備。" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業は自社ナラティブの語り方を知っているか？", status: "partial", answer: "山室・小野（コンサル経験者）は熟知。新規メンバーへの落とし込みはこれから。" },
+            { q: "最も成果を出す営業はどんなストーリー／事例を語るか？", status: "answered", answer: "シグマクシス新卒420人／INTLOOP（IT職/PMO推薦度8/10）。同業事例で警戒心突破。" },
+            { q: "どの営業でも一貫したナラティブを語れるか？", status: "answered", answer: "バトルカードv3の判定ロジック→5リーフで分岐統一。" },
+            { q: "顧客タイプによって、効くナラティブは違うか？", status: "answered", answer: "ICP×取組状況×対象で5リーフ分岐。A-1新卒VARIETAS型エンプラが★★★最有望。" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "セールスピッチは、Web／営業資料／コンテンツのメッセージと整合しているか？", status: "partial", answer: "セールスデックv2/バトルカードv3は整合。Webサイトは未更新（旧ポジ）。" },
+            { q: "マーケコンテンツはバイヤーに前提知識／参照枠を提供しているか？", status: "no_data", answer: "啓蒙コンテンツ（1pager）はあるが、ファネル各段階のコンテンツは未設計。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 07. Marketing Channels ===== */
+    {
+      id: "channels", num: "07", group: "execution",
+      name: "Marketing Channels & Partnerships",
+      status: "pending",
+      summary: "代理店ルート（成果報酬型）の販路あり。他チャネルは未着手",
+      current: {
+        version: "—", date: "未着手",
+        title: "代理店ルートのみ把握",
+        statement: "Tier③エンプラ向け代理店契約（成果報酬型）の販路あり。アウトバウンド/インバウンド/コンテンツ/イベント等のチャネル設計はこれから。",
+        source: "5/17 定例議事録"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "社内インタビュー / CRM分析 / 市場分析",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "どのチャネル／パートナーが最も質の高いリードを生み出しているか？（データ基準）", status: "no_data", answer: "リード源データ未整備。CRM接続が前提。" },
+            { q: "その結果に基づき、その投資を倍掛けしているか？", status: "no_data", answer: "投資配分未設計。" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業は主要パートナーのコミュニティ／技術／流通を理解しているか？", status: "partial", answer: "代理店ルート（成果報酬型）は把握。他パートナー未開拓。" },
+            { q: "これらパートナーと明確なコミュニケーション／連携があるか？", status: "no_data", answer: "代理店との運用ルール未整備。" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "ターゲットペルソナの学習方法（情報源）を顧客調査で把握しているか？", status: "no_data", answer: "ペルソナの情報源/コミュニティ/インフルエンサー未調査。" },
+            { q: "どこで情報／紹介を得ているか？", status: "no_data", answer: "未調査。" },
+            { q: "どのイベント／コミュニティ／インフルエンサーを信頼しているか？", status: "no_data", answer: "未調査。" },
+            { q: "どのチャネル／パートナーシップが最も質の高いリードを生み出すか？", status: "no_data", answer: "データなし。" },
+            { q: "未開拓の新規パートナーシップ／チャネル機会はあるか？", status: "no_data", answer: "未着手。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 08. Sales Enablement ===== */
+    {
+      id: "sales_enablement", num: "08", group: "execution",
+      name: "Sales Enablement",
+      status: "progress",
+      summary: "バトルカード/ROI/TCO/事例化ルール整備中。導線整理はこれから",
+      current: {
+        version: "v0.5", date: "2026-05-23",
+        title: "資材は揃いつつあり、運用ルール整理中",
+        statement: "資材: バトルカードv3 / ROI/TCO_v3 / 事例（シグマクシス・INTLOOP） / コンテキスト面接1pager。事例化KPI=月1件以上、営業段階で導入事例OK握り＋値引き引換のルール化済。新規Tier③向け営業オンボーディング導線は未整備。",
+        source: "5/23 バトルカードv3 共通弾倉"
+      },
+      history: [],
+      richType: "sales_enablement",
+      pmaQuestions: {
+        methods: "社内インタビュー / 10-15件の商談録音 / Win/Loss / SDRアウトリーチ分析 / 営業資料評価",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "営業／CSが顧客フィードバックをCRM／プロダクト／マーケに共有する仕組みがあるか？", status: "partial", answer: "Slack/CRMで一部やりとり。体系化フォーマット（Internal Alignment Demo型FW等）は未適用。" }
+          ]},
+          { name: "セールス", questions: [
+            { q: "営業はプロダクト／競合／市場を理解し、ピッチ・デモの研修に納得しているか？", status: "partial", answer: "山室・小野は熟知。新規メンバーへの研修はこれから。" },
+            { q: "必要な営業資料（ピッチデック／1pager／バトルカード／反論処理／スクリプト／メールテンプレ／リード）を持っており、保管場所を把握しているか？", status: "answered", answer: "バトルカードv3／ROI/TCO_v3／事例（シグマクシス・INTLOOP）／コンテキスト面接1pager／セールスデックv2 揃いつつあり。" },
+            { q: "理想を言えば、他にどんなコンテンツが欲しいか？", status: "partial", answer: "Tier③向け業界別カスタム資料、デモスクリプト、リファレンスコール基準が要望。" }
+          ]},
+          { name: "マーケティング", questions: [
+            { q: "営業資料は一箇所に集約され、利用状況が追跡されているか？", status: "partial", answer: "Notion/Dropbox整理中。利用追跡なし。" },
+            { q: "営業はある程度カスタマイズ可能か？", status: "no_data", answer: "カスタマイズルール未整備。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 09. Product Adoption ===== */
+    {
+      id: "product_adoption", num: "09", group: "execution",
+      name: "Product Adoption",
+      status: "pending",
+      summary: "導入後のオンボーディング/活用度/Churn指標未着手",
+      current: {
+        version: "—", date: "未着手",
+        title: "TTV/Adoption指標未定義",
+        statement: "導入実績50社超だがTime-to-Value/活用度KPI/Churn理由分類は未整備。",
+        source: "—"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "社内インタビュー / 更新・Churn顧客10〜15件のCSMコール / Renewal・Churn分析 / CSMアウトリーチ分析 / プロダクト活用度分析",
+        groups: [
+          { name: "社内アラインメント", questions: [
+            { q: "ユーザーが導入後にスムーズに活用できるオンボーディングプロセスがあるか？", status: "no_data", answer: "オンボーディングフロー未設計。" },
+            { q: "ユーザー単位／アカウント単位の指標で「Product Adoption」が明確に定義されているか？", status: "no_data", answer: "Adoption定義なし。" },
+            { q: "その定義はチーム横断で共通理解されているか？", status: "no_data", answer: "未設計のため共有なし。" }
+          ]},
+          { name: "プロダクト / CS / マーケティング", questions: [
+            { q: "更新につながる「最低限の活用度・エンゲージメント水準」を把握しているか？", status: "no_data", answer: "更新ドライバ分析なし。" },
+            { q: "活用度を段階的に引き上げる仕組み（プログレッシブ・アダプション）はあるか？", status: "no_data", answer: "未整備。" },
+            { q: "ユーザー行動に応じたトリガーメール／ポップアップ／CSMアウトリーチが整備されているか？", status: "no_data", answer: "未整備。" },
+            { q: "ドキュメントサイト／プロダクトツアー／LMS／プロダクト内事例／コミュニティはあるか？", status: "partial", answer: "事例（シグマクシス/INTLOOP）はあるがプロダクト埋込なし。ドキュメントサイト/コミュニティなし。" },
+            { q: "早期警戒システムを伴うアカウントヘルススコアがあるか？", status: "no_data", answer: "未整備。" },
+            { q: "PBR（Periodic Business Review）と更新プロセスは整備されているか？", status: "no_data", answer: "未整備。" }
+          ]}
+        ]
+      }
+    },
+
+    /* ===== 10. Internal Alignment ===== */
+    {
+      id: "internal_alignment", num: "10", group: "cross",
+      name: "Internal Alignment",
+      status: "pending",
+      summary: "Sales/Product/Marketing間のアライメント定例化未着手",
+      current: {
+        version: "—", date: "未着手",
+        title: "週次定例はあるがフォーマット未定",
+        statement: "毎週土曜の定例はあるが、PMM/Sales/Product間のアライメント標準フォーマットは未着手。",
+        source: "—"
+      },
+      history: [],
+      richType: null,
+      pmaQuestions: {
+        methods: "社内インタビュー / 定例議事録レビュー / Internal Alignment Demo型FW適用",
+        groups: [
+          { name: "クロスファンクショナル・アラインメント", questions: [
+            { q: "標準化された社内アラインメントの定例（週次／月次）があるか？", status: "partial", answer: "毎週土曜9:30 定例あり。アジェンダ標準化はこれから。" },
+            { q: "PMM／Sales／Product／CS の間で、ポジショニング・プライシング・ナラティブの認識が揃っているか？", status: "partial", answer: "ポジショニング/ナラティブは合意。Pricing D案/Adoptionは未整理。" },
+            { q: "チーム横断のコンフリクトを表面化し解決する仕組みがあるか？", status: "no_data", answer: "コンフリクト解消プロセス未定義。" },
+            { q: "重要なローンチで Internal Alignment Demo型FW を適用しているか？", status: "no_data", answer: "FW未適用。今後の重要機能リリースで適用予定。" }
+          ]}
+        ]
+      }
+    }
+  ]
+};
+
+/* ============ RICH VIEW RENDERERS ============ */
+function renderRichView(cat) {
+  switch (cat.richType) {
+    case "icp_personas": return renderRichICP();
+    case "problem_solution": return renderRichProblem();
+    case "positioning_messaging": return renderRichPositioning();
+    case "pricing": return renderRichPricing();
+    case "competition": return renderRichCompetition();
+    case "sales_pitch": return renderRichSalesPitch();
+    case "sales_enablement": return renderRichSalesEnablement();
+    default: return null;
+  }
+}
+
+function renderRichICP() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 Tier別 ターゲット戦略（3カラム）</div>
+      <div class="tier-grid">
+        <div class="tier-card hero">
+          <div class="badge">★★★ 最優先</div>
+          <div class="label">TIER ③ ターゲット</div>
+          <h4>大規模日系エンプラ</h4>
+          <div class="companies">NTT / 富士通 / NEC / アクセンチュア / 大手商社 / 大手金融 / 大手メーカー本社</div>
+          <div class="strategy">敵がVARIETASで明確 / 中途ハイクラスで差別化 / 代理店契約(成果報酬型)の販路あり</div>
+        </div>
+        <div class="tier-card tier1">
+          <div class="badge">維持のみ</div>
+          <div class="label">TIER ① コア</div>
+          <h4>戦略コンサル・IBD</h4>
+          <div class="companies">MBB / AT Kearney / Strategy& / 野村AM / SMBC IBD 等</div>
+          <div class="strategy">既存実績維持 / 山室・小野直接フォロー / 新規深追いせず</div>
+        </div>
+        <div class="tier-card">
+          <div class="badge">保留</div>
+          <div class="label">TIER ② 準コア</div>
+          <h4>急成長メガベン・IT専門職</h4>
+          <div class="companies">LayerX / ログラス / SHIFT / INTLOOP 等</div>
+          <div class="strategy">PeopleXに負ける傾向 / 訴求軸整理まで一時保留</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">👥 バイヤーペルソナ 4種（2×2グリッド）</div>
+      <div class="persona-grid">
+        <div class="persona t3">
+          <div class="persona-head">
+            <span class="tier-tag">★★★ T3</span>
+            <span class="role">意思決定者</span>
+            <span class="name">田中 恵子（42）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">中途採用企画M / 大手商社 / 5,000名超ジョブ型移行中</div>
+            <div class="row"><b>Challenge:</b> VARIETAS新卒固定では中途職務適性測れず／上長「揃えろ」圧／稟議3-6ヶ月</div>
+            <div class="msg">「新卒と中途では見るべき適性が根本的に異なる。VARIETASの固定項目は新卒向け設計」</div>
+          </div>
+        </div>
+        <div class="persona t3">
+          <div class="persona-head">
+            <span class="tier-tag">★★★ T3</span>
+            <span class="role">チャンピオン</span>
+            <span class="name">鈴木 翔太（35）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">HRBP / 大手IT・SIer / 1k-10k名 / ジョブ型・専門職に舵</div>
+            <div class="row"><b>Challenge:</b> PMO・ITコンサルの実務適性を面接で測る方法なし／工数限界／上長説得データなし</div>
+            <div class="msg">「PMOとして活躍できるかを面接前に数値化できます」（INTLOOP事例直球）</div>
+          </div>
+        </div>
+        <div class="persona t1">
+          <div class="persona-head">
+            <span class="tier-tag">T1 維持</span>
+            <span class="role">意思決定者</span>
+            <span class="name">佐藤 健一（45）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">採用統括M / 戦略コンサル / 元コンサル出身・論理思考力高い</div>
+            <div class="row"><b>Challenge:</b> ケース面接の評価バラつき／現役コンサル面接官の工数／テスト形式は回答出回り問題</div>
+            <div class="msg">「シグマクシスが導入して新卒420人完了、離脱率5%」— 同業事例が最強</div>
+          </div>
+        </div>
+        <div class="persona t2">
+          <div class="persona-head">
+            <span class="tier-tag">T2 保留</span>
+            <span class="role">意思決定者</span>
+            <span class="name">中村 大輝（34）</span>
+          </div>
+          <div class="persona-body">
+            <div class="row">採用M / 急成長SaaS / 300-3k名 / 組織半年で変わる</div>
+            <div class="row"><b>Challenge:</b> 「そもそもAI面接導入するか決まってない」が最大の競合／PeopleX認知度No.1</div>
+            <div class="msg">「組織が変わっても評価基準をすぐ再設計できます」（コンテキスト面接の本質価値）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <a class="external-link" href="CaseMatch_Narrative_Battlecard.html" target="_blank">バトルカードv3 ICPセクション 完全版を開く</a>
+    </div>
+  `;
+}
+
+function renderRichProblem() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">⚠️ 解決すべき課題</div>
+      <div class="narrative-legend">
+        <div class="narr-box" style="border-left-color: var(--red); background: #FFF4F0;">
+          <h4 style="color: var(--red);">課題A: 既存AI面接の評価不可能性</h4>
+          <p>VARIETAS等の固定10項目では中途ハイクラスのコンテキスト評価ができない。職務ごとに評価軸が違う。</p>
+        </div>
+        <div class="narr-box" style="border-left-color: var(--red); background: #FFF4F0;">
+          <h4 style="color: var(--red);">課題B: 汎用AI面接の深さ不足</h4>
+          <p>汎用AI面接は大量採用・工数削減向け。ハイエンド人材の評価には深さが足りない。</p>
+        </div>
+      </div>
+    </div>
+    <div class="rich-section">
+      <div class="rich-section-title">✅ 提供するソリューション</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>解A: 候補者ごとスクラッチ設計</h4>
+          <p>毎回スクラッチで面接設計。カスタマイズではなく、案件ごとに評価軸を構築。安定動作＋この価格で提供。</p>
+        </div>
+        <div class="narr-box gold">
+          <h4>解B: ナレッジグラフUI</h4>
+          <p>候補者のコンテキストをObsidian的グラフで可視化。職務適性(P-J fit)を数値化。Excelエクスポート不可＝ロックイン根拠。</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichPositioning() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 カテゴリー三層</div>
+      <div class="category-layers">
+        <div class="layer-row market">
+          <span class="lname">マーケット</span>
+          <span class="ltext">AI面接</span>
+        </div>
+        <div class="layer-row category">
+          <span class="lname">カテゴリー</span>
+          <span class="ltext">コンテキスト面接</span>
+        </div>
+        <div class="layer-row positioning">
+          <span class="lname">ポジショニング</span>
+          <span class="ltext">中途ハイクラス採用専用</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📣 4ナラティブ案</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>A案: コンテキスト面接 — 中途ハイクラス主力</h4>
+          <p>候補者コンテキスト評価可能化。スクラッチ設計＋ナレッジグラフUI。</p>
+          <div class="ag">強い相手: VARIETAS / 中途ハイクラス採用</div>
+        </div>
+        <div class="narr-box">
+          <h4>B案: AI面接の第2世代 — カテゴリー創造</h4>
+          <p>既存AI面接の限界を踏まえて「次の世代」を打ち出す。</p>
+          <div class="ag">強い相手: AI面接導入済で物足りない層</div>
+        </div>
+        <div class="narr-box">
+          <h4>C案: 失敗転換 / 構造化面接の次</h4>
+          <p>過去中途失敗の真因転換 or SPI進化軸。</p>
+          <div class="ag">強い相手: 中途AI面接やめた組 / SPI使用エンプラ</div>
+        </div>
+        <div class="narr-box green">
+          <h4>D案: 新卒ハイクラス転換 — シグマクシス事例武器</h4>
+          <p>新卒ハイクラス採用専用。シグマクシス新卒420人 / INTLOOP 等の実績で警戒心を上書き。</p>
+          <div class="ag">強い相手: 新卒AI面接で失敗した層</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <a class="external-link" href="CaseMatch_Narrative_Battlecard.html" target="_blank">バトルカードv3 判定ロジックツリー完全版を開く</a>
+    </div>
+  `;
+}
+
+function renderRichPricing() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">💰 採用ROI 公式（通過期待値3倍式）</div>
+      <div class="roi-formula">
+        <div class="ftitle">FORMULA</div>
+        <div class="fstep">① 通過期待値 <b>3倍</b></div>
+        <div class="fstep"><span class="arr">→</span> 既存面接コスト <b>1/3</b> に圧縮</div>
+        <div class="fstep"><span class="arr">→</span> 残り <b>2/3</b> をCaseMatchの価格として頂く</div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🔄 SPI置換型 マーサー型稟議ロジック</div>
+      <div class="narrative-legend">
+        <div class="narr-box">
+          <h4>SPI使用企業向け</h4>
+          <p>「SPI予算をそのまま振り替え」マーサー型ロジックで稟議を通す。SPI=能力定量化 / コンテキスト面接=価値観/組織適性のアトラクト材料化。</p>
+        </div>
+        <div class="narr-box gold">
+          <h4>2段構え訴求</h4>
+          <p>短期=現場ROI（採用効率3倍）／長期=TCO（SPI置換＋既存中途面接コスト圧縮）。稟議3-6ヶ月エンプラ向け。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📌 残論点（5/24定例）</div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg);">
+        <h4 style="color: var(--orange);">プライシングD案の具体プラン詰め</h4>
+        <p>料金モデル（PSM/Value-based/従量等）の選択、パッケージ構成、年契約割引、エンプラ枠の上限／下限価格の確定。</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichCompetition() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🏆 国内4社競合マップ</div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th style="width:18%;">競合</th>
+            <th style="width:25%;">ポジション</th>
+            <th style="width:18%;">料金</th>
+            <th>弱点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cname">PeopleX</td>
+            <td>AI面接認知度No.1 / 対話型</td>
+            <td>無料〜¥500/件</td>
+            <td class="weak">評価の深さ不足 / 専門職に不向き</td>
+          </tr>
+          <tr>
+            <td class="cname">VARIETAS AI面接官</td>
+            <td>カルチャーフィット / 超大手向け</td>
+            <td>¥75,000/月〜</td>
+            <td class="weak">能力評価が浅い / 10項目固定 / カスタマイズ不可</td>
+          </tr>
+          <tr>
+            <td class="cname">ROXX Zcareer</td>
+            <td>現場職・大量採用特化</td>
+            <td>非公開</td>
+            <td class="weak">セグメントが異なる（CaseMatch ICP外）</td>
+          </tr>
+          <tr>
+            <td class="cname">HireVue</td>
+            <td>グローバル最大手</td>
+            <td>$35,000/年〜</td>
+            <td class="weak">価格高 / 日本語対応弱 / グローバル一律</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🌏 海外5社リサーチ（2026-05-24 完了）</div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th style="width:18%;">プレイヤー</th>
+            <th style="width:18%;">タイプ</th>
+            <th style="width:18%;">調達・規模</th>
+            <th>CaseMatchとの距離</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cname">HireVue</td>
+            <td>準一体型（3層スイート）</td>
+            <td>$93M〜$390M / 360名</td>
+            <td>大量採用レーン（Fortune100の60%）。<b>ICP違いで正面衝突薄い</b></td>
+          </tr>
+          <tr style="background: rgba(184,134,11,0.06);">
+            <td class="cname" style="color: var(--gold); font-weight: 700;">Eightfold ★</td>
+            <td>完全一体型（全LC）</td>
+            <td>$410M / $2.1Bバリュエーション / 281名</td>
+            <td><b>プロダクト構造として最も近い</b>。ただし上から降りる縦統合、CaseMatchは下から登る逆方向</td>
+          </tr>
+          <tr>
+            <td class="cname">BrightHire</td>
+            <td>分離型→Zoom配下</td>
+            <td>$36M → 2025/11 Zoom買収</td>
+            <td><b>"買収される運命"の分離型</b>。CaseMatchの「買収されない構造」を補強するストーリー材料</td>
+          </tr>
+          <tr>
+            <td class="cname">Sapia.ai (※Siera該当)</td>
+            <td>準分離型（Chat型）</td>
+            <td>非公開（推定$20M+） / 100名</td>
+            <td><b>思想・カテゴリー命名権戦略が最も重なる</b>。"Smart Interviewer"。要ウォッチ</td>
+          </tr>
+          <tr>
+            <td class="cname">Perfect (※Hire Glow該当)</td>
+            <td>準一体型（ATS上エージェント）</td>
+            <td>$23M Seed / 30-50名</td>
+            <td><b>"non-seat-based"を実証済</b>。承認/スキップ学習の Reinforcement型コンテキスト。要警戒</td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="foreign-product-research.html" target="_blank" style="display: inline-block; margin-top: 12px; padding: 10px 18px; background: var(--navy); color: white; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 600;">
+        📄 海外プロダクトリサーチ詳細HTML（5社比較＋§6追加深掘り＋日本版Eightfoldポジション）→ 開く
+      </a>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">🇯🇵 日本版Eightfold — 逆方向縦統合で国内空白を取る</div>
+      <div class="narr-box gold">
+        <h4>同じプラットフォーム、登る方向が逆</h4>
+        <p>Eightfoldは Talent Intelligence発（上）で面接に降りてきてる。<b>CaseMatchは面接コンテキスト発（下）で組織活用に登っていく</b>。到達点は同じ「採用→社内異動→人材開発の縦統合」だが、登り方が違う。</p>
+        <p style="margin-top: 8px;"><b>国内ではこの方向の縦統合プレイヤーが不在</b>——HRMOSは「採用→労務」の流通連続性で面接コンテキスト発ではない。カオナビ/タレパレは入社後専業。国内AI面接（PeopleX/VARIETAS/ROXX）は面接単体止まり。<b>右上空白ポジションはCaseMatchが取りに行ける</b>。</p>
+      </div>
+      <div class="narrative-legend" style="margin-top: 12px;">
+        <div class="narr-box">
+          <h4>フェーズ1（足元）</h4>
+          <p>面接コンテキスト→入社後3ヶ月のオンボーディング設計シート自動生成のみ（ナレッジグラフUIで完結、データ流通APIなし）</p>
+        </div>
+        <div class="narr-box">
+          <h4>フェーズ2（中期）</h4>
+          <p>タレマネSaaS（カオナビ／タレントパレット／HRMOS）との接点APIだけ握る。<b>いきなりEightfold型を目指さない</b>（$400M級資金勝負ゾーンに突入してしまう）</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">⚔️ 競合別 撃ち返しメッセージ</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>vs VARIETAS（最重要敵）</h4>
+          <p>「新卒AIで実績のあるVARIETASでも、中途は別物。10項目固定では、ハイクラスのアトラクトは取れない。」</p>
+        </div>
+        <div class="narr-box">
+          <h4>vs PeopleX</h4>
+          <p>「対話型AIは大量採用向け。中途ハイクラスのコンテキスト評価には深さが足りない。」</p>
+        </div>
+        <div class="narr-box">
+          <h4>vs Eightfold（海外脅威）</h4>
+          <p>「Eightfoldは Talent Intelligence発で面接に降りてきてる横軸（スキルグラフ）。CaseMatchは面接発で組織活用に登る深さ軸（個別ジャーニー）。粒度が違うので共存可能、ただし2026/4の Eightfold AI Interview Companion ＋ Oracle Recruiting Cloud 組込みは要監視。」</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📌 残論点（5/24定例以降）</div>
+      <div class="narr-box" style="border-left-color: var(--green); background: var(--green-bg);">
+        <h4 style="color: var(--green);">✅ 完了：海外プロダクトリサーチ（HireVue/Eightfold/BrightHire/Sapia.ai/Perfect 5社＋追加深掘り14プレイヤー）</h4>
+        <p>2026-05-24 詳細HTMLとして格納完了。§3.5「日本版Eightfold逆方向縦統合」セクションで国内ポジショニングマップ＋空白ゾーン特定済。</p>
+      </div>
+      <div class="narr-box" style="border-left-color: var(--orange); background: var(--orange-bg); margin-top: 10px;">
+        <h4 style="color: var(--orange);">次の論点</h4>
+        <p>① 海外脅威2大注意シグナル（BrightHire×Zoom / Eightfold×Oracle）の日本進出タイミング監視　② G2/Capterra での国内勢レビュー分析　③ Churn理由の競合別分類</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderRichSalesPitch() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">🎯 判定ロジック（Q1→Q2→リーフ）</div>
+      <div class="narr-box gold">
+        <p><b>Q1:</b> 顧客はAI面接に取り組んでいますか？ → A(取り組み中) / B(未取組) / C(過去やめた)</p>
+        <p style="margin-top: 6px;"><b>Q2:</b> 対象は新卒？中途？ → 5つのリーフカードに分岐</p>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📇 5リーフ詳細カード（営業トーク本体）</div>
+      <div class="leaf-grid">
+        <div class="leaf-mini hero">
+          <div class="pri">★★★ 最有望</div>
+          <div class="lname">A-1. 新卒VARIETAS型エンプラ</div>
+          <div class="core"><b>"新卒AIで実績のあるVARIETASでも、中途は別物"</b><br>新卒実績見せ→中途リプレイスへ繋ぐ最有望ライン</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">★★ 中途リプレイス</div>
+          <div class="lname">A-2/3. 中途ハイコンテキスト置換</div>
+          <div class="core"><b>"汎用AI面接では中途ハイクラスは取れない"</b><br>全面リプレイス or 一部職種限定</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">★ 啓蒙コスト中</div>
+          <div class="lname">B. 未経験エンプラ</div>
+          <div class="core"><b>"AI面接でよりハイエンドな人材を採用できる"</b><br>新卒/中途どちらでも入れる。SPI判明→置換提案</div>
+        </div>
+        <div class="leaf-mini" style="border-left-color: var(--green);">
+          <div class="pri" style="color:var(--green);">★ D案 警戒心戦</div>
+          <div class="lname" style="color:var(--green);">C-1. 新卒ハイクラス転換</div>
+          <div class="core"><b>"良い学生が取れなかった真因はコンテキスト不足"</b><br>シグマクシス420人等のハイクラス新卒事例</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">★ 警戒心戦</div>
+          <div class="lname">C-2. 中途ハイエンド転換</div>
+          <div class="core"><b>"作業コスト削減目的では、ハイエンドは取れない"</b><br>KPIごと変える提案</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <a class="external-link" href="CaseMatch_Narrative_Battlecard.html" target="_blank">バトルカードv3 完全版を開く（5リーフ詳細／逆質問切り返し／オープニング3行）</a>
+    </div>
+  `;
+}
+
+function renderRichSalesEnablement() {
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">📚 営業資材インベントリ</div>
+      <div class="leaf-grid">
+        <div class="leaf-mini hero">
+          <div class="pri">★ コア資材</div>
+          <div class="lname">バトルカードv3</div>
+          <div class="core">ICP × 判定ロジック × 5リーフ詳細</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">価格訴求</div>
+          <div class="lname">ROI/TCO v3 PPTX</div>
+          <div class="core">通過期待値3倍式 / SPI置換ロジック</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">事例</div>
+          <div class="lname">シグマクシス新卒420人</div>
+          <div class="core">Tier①向け同業事例 / 離脱率5%</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">事例</div>
+          <div class="lname">INTLOOP IT職・PMO職</div>
+          <div class="core">推薦度8/10 / Tier③チャンピオン向け直球</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">啓蒙</div>
+          <div class="lname">コンテキスト面接1pager</div>
+          <div class="core">未取組顧客向け概念啓蒙</div>
+        </div>
+        <div class="leaf-mini">
+          <div class="pri">3pager</div>
+          <div class="lname">セールスデック v2</div>
+          <div class="core">5/14版 / 全体ストーリー</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rich-section">
+      <div class="rich-section-title">📋 運用ルール</div>
+      <div class="narrative-legend">
+        <div class="narr-box gold">
+          <h4>事例化KPI</h4>
+          <p>営業段階で<b>導入事例OK握り</b>デフォルト化／値引きと引き換え／KPI: 月1件以上</p>
+        </div>
+        <div class="narr-box">
+          <h4>言葉のルール</h4>
+          <p>OK: コンテキスト面接 / コンテキスト型AI面接<br>NG: ハイコンテキストAI面接（重い）</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ============ PMA Q&A RENDERER ============ */
+function renderPMAQuestions(cat) {
+  if (!cat.pmaQuestions) return '';
+  const pma = cat.pmaQuestions;
+
+  // 統計
+  let cnt = { answered: 0, partial: 0, no_data: 0, total: 0 };
+  pma.groups.forEach(g => g.questions.forEach(q => {
+    cnt[q.status]++; cnt.total++;
+  }));
+  const pct = (n) => cnt.total ? Math.round(n / cnt.total * 100) : 0;
+
+  const icon = s => ({ answered: '✅', partial: '🟡', no_data: '❌' }[s] || '⚪');
+  const slabel = s => ({ answered: '回答済', partial: '部分回答', no_data: '未回答' }[s] || s);
+
+  return `
+    <div class="rich-section">
+      <div class="rich-section-title">📋 Questions × CaseMatchの答え（${cnt.total}問）</div>
+
+      <div class="qna-summary-bar">
+        <span class="qna-stat a">✅ 回答済 ${cnt.answered} / ${cnt.total} (${pct(cnt.answered)}%)</span>
+        <span class="qna-stat p">🟡 部分回答 ${cnt.partial} (${pct(cnt.partial)}%)</span>
+        <span class="qna-stat n">❌ 未回答 ${cnt.no_data} (${pct(cnt.no_data)}%)</span>
+      </div>
+
+      <div class="pma-methods">
+        <b>調査メソッド:</b> ${pma.methods}
+      </div>
+
+      ${pma.groups.map(g => `
+        <div class="pma-block">
+          <div class="pma-group-name">
+            <span class="gtag">${g.name}</span>
+            <span>(${g.questions.length}問)</span>
+          </div>
+          <div class="qna-list">
+            ${g.questions.map(q => `
+              <div class="qna-item ${q.status}" onclick="this.classList.toggle('open')">
+                <div class="qrow">
+                  <span class="qicon">${icon(q.status)}</span>
+                  <span class="qtext">${q.q}</span>
+                </div>
+                <div class="arow"><b>[${slabel(q.status)}] CaseMatch:</b> ${q.answer}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* ============ RENDER ============ */
+const detailContainer = document.getElementById('detailContainer');
+
+function statusLabel(s) {
+  return { confirmed: '🟢 確定', progress: '🟠 進行中', pending: '⚪ 未着手' }[s] || s;
+}
+
+function renderCoverList() {
+  const fnd = document.getElementById('foundationList');
+  const exc = document.getElementById('executionList');
+  gtmAudit.categories.filter(c => c.group === 'foundation').forEach(c => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="li-num">${parseInt(c.num)}.</span><span class="li-text">${c.name}</span><span class="li-status ${c.status}"></span><span class="li-ver">${c.current.version}</span>`;
+    li.addEventListener('click', () => openDetail(c.id));
+    fnd.appendChild(li);
+  });
+  gtmAudit.categories.filter(c => c.group === 'execution').forEach(c => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="li-num">${parseInt(c.num)}.</span><span class="li-text">${c.name}</span><span class="li-status ${c.status}"></span><span class="li-ver">${c.current.version}</span>`;
+    li.addEventListener('click', () => openDetail(c.id));
+    exc.appendChild(li);
+  });
+  const cross = gtmAudit.categories.find(c => c.group === 'cross');
+  const ci = document.getElementById('crossItem');
+  ci.innerHTML = `<span class="li-num">10.</span><span class="li-text">${cross.name}</span><span class="li-status ${cross.status}"></span><span class="li-ver">${cross.current.version}</span>`;
+  ci.addEventListener('click', () => openDetail(cross.id));
+}
+
+function renderTiles() {
+  const groups = { foundation: 'foundationTiles', execution: 'executionTiles', cross: 'crossTiles' };
+  Object.entries(groups).forEach(([g, containerId]) => {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    gtmAudit.categories.filter(c => c.group === g).forEach(cat => {
+      const tile = document.createElement('div');
+      tile.className = `tile ${cat.status}`;
+      tile.innerHTML = `
+        <div class="head">
+          <div class="num">${cat.num}. ${cat.group.toUpperCase()}</div>
+          <span class="ver">${cat.current.version}</span>
+        </div>
+        <h3>${cat.name}</h3>
+        <div class="summary">${cat.summary}</div>
+        <div class="footer-meta">
+          <span>${statusLabel(cat.status)}</span>
+          <span>履歴 <span class="hcount">${cat.history.length}</span> 件 ・ ${cat.current.date}</span>
+        </div>
+      `;
+      tile.addEventListener('click', () => openDetail(cat.id));
+      container.appendChild(tile);
+    });
+  });
+}
+
+function renderDiff(diff) {
+  if (!diff || diff.length === 0) return '<div class="diff-unchanged">差分データなし（初版）</div>';
+  return diff.map(d => {
+    const cls = d.type === 'add' ? 'diff-add' : d.type === 'del' ? 'diff-del' : 'diff-unchanged';
+    return `<div class="${cls}">${d.text}</div>`;
+  }).join('');
+}
+
+function openDetail(id) {
+  let section = document.getElementById(`detail-${id}`);
+  if (section) {
+    section.classList.add('active');
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const cat = gtmAudit.categories.find(c => c.id === id);
+  if (!cat) return;
+
+  section = document.createElement('section');
+  section.className = `detail-section active ${cat.status}`;
+  section.id = `detail-${id}`;
+
+  const timelineNodes = [...cat.history, { version: cat.current.version, date: cat.current.date, isCurrent: true }];
+  const richHTMLBase = renderRichView(cat) || '';
+  const pmaHTML = renderPMAQuestions(cat);
+  const richHTML = richHTMLBase + pmaHTML;
+
+  section.innerHTML = `
+    <div class="detail-head">
+      <div class="title-block">
+        <div class="num">ELEMENT ${cat.num} / ${cat.group.toUpperCase()} / ${statusLabel(cat.status)}</div>
+        <h2>${cat.name}</h2>
+      </div>
+      <button class="close-btn" onclick="document.getElementById('detail-${id}').classList.remove('active')">閉じる ×</button>
+    </div>
+
+    <div class="current-card">
+      <span class="badge">CURRENT — ${cat.current.version}</span>
+      <div class="ver-info">
+        <span>📅 <b>${cat.current.date}</b></span>
+        <span>📍 <b>${cat.current.source}</b></span>
+      </div>
+      <div class="title-text">${cat.current.title}</div>
+      <div class="statement">${cat.current.statement}</div>
+    </div>
+
+    ${richHTML ? `
+    <div class="rich-wrap">
+      <button class="rich-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+        <span>📂 リッチ詳細＋Q&A を見る — 構造化ビュー / 質問への回答</span>
+        <span class="arrow">▶</span>
+      </button>
+      <div class="rich-content">
+        ${richHTML}
+      </div>
+    </div>` : ''}
+
+    ${cat.history.length > 0 ? `
+    <div class="timeline-wrap">
+      <div class="label">⏱ Timeline — クリックで該当バージョンへジャンプ</div>
+      <div class="timeline">
+        ${timelineNodes.map(n => `
+          <div class="node ${n.isCurrent ? 'current' : ''}" data-ver="${n.version}">
+            <div class="circle"></div>
+            <div class="ver">${n.version}</div>
+            <div class="date">${n.date}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="history-wrap">
+      <div class="label">📜 History — ${cat.history.length}件 / 古い順</div>
+      <div class="history-list">
+        ${cat.history.map(h => `
+          <div class="history-item" data-ver="${h.version}">
+            <div class="history-summary">
+              <div class="left">
+                <span class="ver-tag">${h.version}</span>
+                <span class="date-tag">${h.date}</span>
+                <span class="title-text">${h.title}</span>
+              </div>
+              <span class="toggle">▶</span>
+            </div>
+            <div class="history-detail">
+              <div class="history-block"><div class="blabel">📝 確定文（当時）</div><div class="btext">${h.statement || '—'}</div></div>
+              <div class="history-block trigger"><div class="blabel">⚡ Trigger</div><div class="btext">${h.trigger || '—'}</div></div>
+              <div class="history-block"><div class="blabel">🔀 Diff（直前との差分）</div><div class="diff-block">${renderDiff(h.diff)}</div></div>
+              <div class="history-block why"><div class="blabel">💡 なぜ変えたか</div><div class="btext">${h.why_changed || '—'}</div></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ` : `<div class="placeholder-note">${cat.status === 'pending' ? '<b>未着手要素</b> — 履歴データなし。今後蓄積予定。' : '履歴データなし — このバージョンが初版'}</div>`}
+  `;
+
+  detailContainer.appendChild(section);
+  section.querySelectorAll('.history-summary').forEach(s => {
+    s.addEventListener('click', () => s.parentElement.classList.toggle('open'));
+  });
+  section.querySelectorAll('.timeline .node').forEach(n => {
+    n.addEventListener('click', () => {
+      const ver = n.dataset.ver;
+      const item = section.querySelector(`.history-item[data-ver="${ver}"]`);
+      if (item) { item.classList.add('open'); item.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    });
+  });
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+renderCoverList();
+renderTiles();
+</script>
+</body>
+</html>
