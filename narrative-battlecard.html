@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="referrer" content="no-referrer">
+<title>CaseMatch Narrative Battlecard v3 — ICP + 判定ロジックツリー</title>
+<style>
+  :root {
+    --navy: #1B3A6B;
+    --dark-text: #1A1A2E;
+    --light-subtitle: #C9D8EF;
+    --accent-text: #94B4D4;
+    --light-gray: #F5F5F5;
+    --footer-gray: #6B7280;
+    --green: #1B5E20;
+    --blue: #1565C0;
+    --teal: #00796B;
+    --red: #C62828;
+    --orange: #EF6C00;
+    --accent-blue: #1976D2;
+    --gold: #B8860B;
+    --gold-bg: #FFF7E5;
+    --gold-bg-strong: #FFE9B0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
+    color: var(--dark-text);
+    line-height: 1.55;
+    background: #FAFAFA;
+    padding: 32px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: var(--navy);
+    color: white;
+    padding: 28px 32px;
+    border-radius: 10px;
+    margin-bottom: 28px;
+  }
+  header .eyebrow {
+    font-size: 11px;
+    color: var(--accent-text);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  header .sub {
+    font-size: 14px;
+    color: var(--light-subtitle);
+  }
+  header .meta {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--accent-text);
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* ===== SECTION ===== */
+  section {
+    background: white;
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  section h2 {
+    font-size: 18px;
+    color: var(--navy);
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--navy);
+  }
+  section .lead {
+    font-size: 13px;
+    color: var(--footer-gray);
+    margin-bottom: 22px;
+  }
+
+  /* ===== ICP ===== */
+  .icp-summary {
+    background: linear-gradient(135deg, #1B3A6B 0%, #2A4F8A 100%);
+    color: white;
+    padding: 18px 22px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+  }
+  .icp-summary h3 {
+    font-size: 14px;
+    color: var(--accent-text);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .icp-summary p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .icp-summary p b {
+    background: var(--gold);
+    color: var(--navy);
+    padding: 1px 8px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+  .tier-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .tier {
+    border: 2px solid #DDE3EC;
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: white;
+    position: relative;
+  }
+  .tier.hero {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+  }
+  .tier .badge {
+    position: absolute;
+    top: -10px;
+    left: 14px;
+    background: var(--navy);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .tier.hero .badge {
+    background: var(--gold);
+  }
+  .tier .label {
+    font-size: 10.5px;
+    color: var(--footer-gray);
+    margin-top: 4px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .tier h4 {
+    font-size: 15px;
+    color: var(--navy);
+    font-weight: 700;
+    margin: 6px 0 8px;
+  }
+  .tier.hero h4 {
+    color: var(--gold);
+  }
+  .tier .companies {
+    font-size: 11.5px;
+    color: var(--dark-text);
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .tier .strategy {
+    font-size: 11.5px;
+    color: var(--footer-gray);
+    padding-top: 8px;
+    border-top: 1px dashed #ECEEF2;
+    margin-top: 6px;
+  }
+
+  /* ===== Persona ===== */
+  .persona-section-title {
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 24px 0 6px;
+    text-transform: uppercase;
+  }
+  .persona-section-sub {
+    font-size: 12px;
+    color: var(--footer-gray);
+    margin-bottom: 14px;
+  }
+  .persona-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .persona {
+    background: white;
+    border: 1px solid #DDE3EC;
+    border-left: 4px solid var(--navy);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .persona.tier3 {
+    border-left-color: var(--gold);
+    background: var(--gold-bg);
+  }
+  .persona.tier1 {
+    border-left-color: var(--green);
+  }
+  .persona.tier2 {
+    border-left-color: var(--footer-gray);
+    background: #FAFAFA;
+  }
+  .persona-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #ECEEF2;
+  }
+  .persona-head .tier-tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: white;
+    background: var(--navy);
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  .persona.tier3 .tier-tag { background: var(--gold); }
+  .persona.tier1 .tier-tag { background: var(--green); }
+  .persona.tier2 .tier-tag { background: var(--footer-gray); }
+  .persona-head .role {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--red);
+    background: #FFE5E5;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .persona-head .name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .persona.tier3 .persona-head .name { color: var(--gold); }
+  .persona-head .title {
+    font-size: 11.5px;
+    color: var(--footer-gray);
+  }
+  .persona-body .row {
+    margin-bottom: 8px;
+  }
+  .persona-body .row:last-child { margin-bottom: 0; }
+  .persona-body .row-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--footer-gray);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .persona-body .row-content {
+    font-size: 11.5px;
+    color: var(--dark-text);
+    line-height: 1.55;
+  }
+  .persona-body .row-content ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .persona-body .row-content ul li {
+    padding: 2px 0 2px 14px;
+    position: relative;
+  }
+  .persona-body .row-content ul li::before {
+    content: "•";
+    position: absolute;
+    left: 2px;
+    color: var(--accent-blue);
+  }
+  .persona-body .msg {
+    background: var(--light-subtitle);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--navy);
+    border-left: 2px solid var(--navy);
+  }
+  .persona.tier3 .persona-body .msg {
+    background: var(--gold-bg-strong);
+    border-left-color: var(--gold);
+    color: #5B4500;
+  }
+  .persona-body .obj {
+    background: #FFF4F0;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    color: var(--red);
+    border-left: 2px solid var(--red);
+  }
+
+  /* ===== LOGIC TREE ===== */
+  .tree-root {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .start-box {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+
+  .level-1-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1.4fr;
+    gap: 18px;
+  }
+
+  .branch {
+    display: flex;
+    flex-direction: column;
+  }
+  .branch::before {
+    content: "";
+    width: 2px;
+    height: 18px;
+    background: var(--accent-text);
+    align-self: center;
+  }
+
+  .l1-node {
+    background: white;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .l1-node .q {
+    font-size: 10px;
+    color: var(--footer-gray);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .l1-node .a {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .l1-node.sub {
+    background: #F8F9FB;
+    border-style: dashed;
+  }
+  .l1-node.sub .a {
+    font-size: 12px;
+  }
+
+  .level-2-wrap {
+    display: grid;
+    gap: 10px;
+  }
+  .level-2-wrap.two-col {
+    grid-template-columns: 1fr 1fr;
+  }
+  .level-2-wrap.single {
+    grid-template-columns: 1fr;
+  }
+  .level-2-wrap > div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .l2-node {
+    background: var(--light-gray);
+    border: 1px solid #DDE3EC;
+    border-radius: 6px;
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 8px;
+  }
+  .l2-node.hero {
+    background: var(--gold-bg);
+    border-color: var(--gold);
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .leaf {
+    background: white;
+    border-left: 4px solid var(--navy);
+    border-radius: 6px;
+    padding: 12px 13px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    font-size: 11.5px;
+    flex: 1;
+  }
+  .leaf.hero {
+    border-left-color: var(--gold);
+    background: var(--gold-bg);
+  }
+  .leaf .pri {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .leaf.hero .pri {
+    color: var(--gold);
+  }
+  .leaf .name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .leaf.hero .name {
+    color: var(--gold);
+  }
+  .leaf .narr {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+  }
+  .leaf.hero .narr {
+    background: var(--gold);
+  }
+  .leaf .core {
+    font-size: 11.5px;
+    color: var(--dark-text);
+    line-height: 1.5;
+    border-top: 1px dashed #ECEEF2;
+    padding-top: 6px;
+  }
+  .leaf .core b {
+    color: var(--navy);
+  }
+  .leaf.hero .core b {
+    color: var(--gold);
+  }
+  .leaf .ref {
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+  .leaf .ref a {
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+
+  /* ===== Detail Cards ===== */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    overflow: hidden;
+    border-top: 4px solid var(--navy);
+  }
+  .card.hero {
+    border-top: 4px solid var(--gold);
+    box-shadow: 0 2px 8px rgba(184,134,11,0.15);
+  }
+  .card-head {
+    padding: 14px 22px;
+    border-bottom: 1px solid #ECEEF2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card-head .path {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    color: var(--footer-gray);
+    background: var(--light-gray);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+  .card-head .pri-badge {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .card.hero .pri-badge {
+    background: var(--gold);
+  }
+  .card-head h3 {
+    flex: 1 1 auto;
+    font-size: 17px;
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .card.hero .card-head h3 {
+    color: var(--gold);
+  }
+
+  .card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .card-body .col {
+    padding: 16px 22px;
+  }
+  .card-body .col-left {
+    border-right: 1px solid #ECEEF2;
+  }
+  .block {
+    margin-bottom: 12px;
+  }
+  .block:last-child { margin-bottom: 0; }
+  .block .label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--footer-gray);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .block .core-frase {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    background: var(--light-subtitle);
+    padding: 10px 12px;
+    border-radius: 6px;
+    border-left: 3px solid var(--navy);
+    line-height: 1.5;
+  }
+  .card.hero .block .core-frase {
+    background: var(--gold-bg-strong);
+    border-left-color: var(--gold);
+    color: #5B4500;
+  }
+  .block ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 12.5px;
+  }
+  .block ul li {
+    padding: 3px 0 3px 18px;
+    position: relative;
+  }
+  .block ul li::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    color: var(--accent-blue);
+    font-weight: 700;
+  }
+  .talk {
+    background: #F8F9FB;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.7;
+    border-left: 2px solid var(--accent-blue);
+  }
+  .talk em {
+    color: var(--red);
+    font-style: normal;
+    font-weight: 600;
+  }
+  .meta-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .meta-tags span {
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--light-gray);
+    color: var(--dark-text);
+    border: 1px solid #E0E5EE;
+  }
+  .meta-tags .competitor {
+    background: #FFE5E5;
+    color: var(--red);
+    border-color: #FFBABA;
+  }
+
+  /* ===== Common box ===== */
+  .common-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .common-grid .box {
+    background: var(--light-gray);
+    border-radius: 8px;
+    padding: 12px 14px;
+    border-left: 3px solid var(--navy);
+  }
+  .common-grid .box h4 {
+    font-size: 12px;
+    color: var(--navy);
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  .common-grid .box p {
+    font-size: 11.5px;
+    color: var(--dark-text);
+    line-height: 1.5;
+  }
+
+  footer {
+    margin-top: 28px;
+    padding: 14px 22px;
+    text-align: center;
+    color: var(--footer-gray);
+    font-size: 11px;
+  }
+  footer .v {
+    color: var(--navy);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">CaseMatch / Sales Enablement</div>
+  <h1>ナラティブ勝ち方バトルカード v3 — ICP × 判定ロジックツリー</h1>
+  <div class="sub">ICPを確認し、AI面接取り組み状況で分岐 → 各リーフで「こう言うべき」が一発で出る構造</div>
+  <div class="meta">
+    <span>作成: 2026-05-23</span>
+    <span>期限: 5/24（土）9:30 定例</span>
+    <span>v1 (5/22) → v2 ロジックツリー → v3 ICP追加 + 分岐リッチ化</span>
+  </div>
+</header>
+
+<!-- ============ 0. ICP × Persona ============ -->
+<section>
+  <h2>0. ICP × バイヤーペルソナ — 全提案の前提</h2>
+  <p class="lead">4/19 ICP決定: <b>ターゲット③エンプラ真ん中集中</b>。コンサル/IBDは既存実績維持のみ、メガベンは保留。アタックリスト 783社</p>
+
+  <div class="icp-summary">
+    <h3>戦略方針</h3>
+    <p><b>Tier③ 大規模日系エンプラ</b>を最優先 / Tier① は既存実績維持のみ / Tier② 一時保留<br>→ 中途ハイクラス採用での <b>VARIETAS / 汎用AI面接</b> との差別化を、リソース集中で取りに行く</p>
+  </div>
+
+  <div class="tier-grid">
+
+    <div class="tier hero">
+      <div class="badge">★★★ 最優先</div>
+      <div class="label">TIER ③ ターゲット</div>
+      <h4>大規模日系エンプラ</h4>
+      <div class="companies">NTT / 富士通 / NEC / アクセンチュア / 大手商社 / 大手金融 / 大手メーカー本社</div>
+      <div class="strategy">敵がVARIETASで明確 / 中途ハイクラスで差別化 / 代理店契約(成果報酬型)の販路あり</div>
+    </div>
+
+    <div class="tier">
+      <div class="badge">維持のみ</div>
+      <div class="label">TIER ① コア</div>
+      <h4>戦略コンサル・IBD</h4>
+      <div class="companies">MBB / AT Kearney / Strategy& / 野村AM / SMBC IBD 等</div>
+      <div class="strategy">既存実績維持 / 山室・小野(コンサル経験者)の直接フォロー / 資料は極論不要 / 新規深追いせず</div>
+    </div>
+
+    <div class="tier">
+      <div class="badge">保留</div>
+      <div class="label">TIER ② 準コア</div>
+      <h4>急成長メガベン・IT専門職</h4>
+      <div class="companies">LayerX / ログラス / SHIFT / INTLOOP 等</div>
+      <div class="strategy">PeopleX に負ける傾向 / 「導入しない」判断が半数 / 訴求軸整理まで一時保留</div>
+    </div>
+
+  </div>
+
+  <div class="persona-section-title">バイヤーペルソナ — 商談相手の解像度</div>
+  <p class="persona-section-sub">各Tierの代表ペルソナ。詳細は <code>persona-tier{1,2,3}-*.md</code> 参照</p>
+
+  <div class="persona-grid">
+
+    <!-- ★ Tier③ A: 田中（最有望） -->
+    <div class="persona tier3">
+      <div class="persona-head">
+        <span class="tier-tag">★★★ TIER ③</span>
+        <span class="role">意思決定者</span>
+        <span class="name">田中 恵子（42歳）</span>
+        <span class="title">中途採用企画マネージャー / 大手商社</span>
+      </div>
+      <div class="persona-body">
+        <div class="row">
+          <div class="row-label">ロジックツリー位置 → 当てるリーフ</div>
+          <div class="row-content"><b>Q1=A 取り組み中</b> / <b>Q2=新卒だけ</b>（中途未着手）→ <a href="#card-a1"><b>A-1 新卒VARIETAS型エンプラ（A案）</b></a> ★★★最有望</div>
+        </div>
+        <div class="row">
+          <div class="row-label">企業／チーム</div>
+          <div class="row-content">従業員5,000名超、ジョブ型移行中。新卒VARIETAS導入済 / 中途未導入。中途3-5名 + 現場面接官20-30名</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Goals</div>
+          <div class="row-content">
+            <ul>
+              <li>ジョブ型移行に伴う <b>専門職採用の質向上</b></li>
+              <li>中途採用の評価標準化（面接官属人化解消）</li>
+              <li>入社後3-6ヶ月の早期離職率低減</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Challenges</div>
+          <div class="row-content">
+            <ul>
+              <li>VARIETAS新卒固定項目では中途の職務適性が測れない</li>
+              <li>上長「新卒と同じベンダーで揃えろ」圧</li>
+              <li>稟議3-6ヶ月、ROI説明必須</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">刺さるメッセージ</div>
+          <div class="msg">「新卒と中途では見るべき適性が根本的に異なります。VARIETASの固定項目は新卒向け設計です」</div>
+        </div>
+        <div class="row">
+          <div class="row-label">最頻出オブジェクション</div>
+          <div class="obj"><b>「新卒でVARIETASを入れているから揃えたい」</b> → 併用提案（新卒=V、中途=CM）+ 同業事例で打ち返す</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ★ Tier③ B: 鈴木（チャンピオン） -->
+    <div class="persona tier3">
+      <div class="persona-head">
+        <span class="tier-tag">★★★ TIER ③</span>
+        <span class="role">チャンピオン</span>
+        <span class="name">鈴木 翔太（35歳）</span>
+        <span class="title">HRBP / 大手IT・SIer</span>
+      </div>
+      <div class="persona-body">
+        <div class="row">
+          <div class="row-label">ロジックツリー位置 → 当てるリーフ</div>
+          <div class="row-content"><b>Q1=B 未着手（PeopleX/VARIETASを検討中）</b> → <a href="#card-b"><b>B 啓蒙型（A案ベース）</b></a> ／ 中途PMO/IT専門職文脈で <a href="#card-a23">A-2/3 中途リプレイス(A案)</a> も応用可</div>
+        </div>
+        <div class="row">
+          <div class="row-label">企業／チーム</div>
+          <div class="row-content">従業員1,000-10,000名、ジョブ型・専門職に舵。HRBP 1-2名でエンジニア・PMO中途20-40名/年。テック感度高</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Goals</div>
+          <div class="row-content">
+            <ul>
+              <li>PMO・ITコンサルの <b>採用品質向上</b>（入社後パフォーマンスで評価される）</li>
+              <li>採用プロセスのデータ化・可視化</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Challenges</div>
+          <div class="row-content">
+            <ul>
+              <li>PMO・ITコンサルの「実務適性」を面接で測る方法がない</li>
+              <li>一人で回しているので工数が限界</li>
+              <li>上長に新ツール導入を説得するデータがない</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">刺さるメッセージ</div>
+          <div class="msg">「PMOとして活躍できるかを面接前に数値化できます」（INTLOOP事例が直球）</div>
+        </div>
+        <div class="row">
+          <div class="row-label">攻略パターン</div>
+          <div class="obj">トライアル即実施 → 評価レポートサンプルで <b>上長を巻き込む</b>。意思決定1-3ヶ月（速い）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier① 佐藤（維持のみ） -->
+    <div class="persona tier1">
+      <div class="persona-head">
+        <span class="tier-tag">TIER ① 維持</span>
+        <span class="role">意思決定者</span>
+        <span class="name">佐藤 健一（45歳）</span>
+        <span class="title">採用統括マネージャー / 戦略コンサル</span>
+      </div>
+      <div class="persona-body">
+        <div class="row">
+          <div class="row-label">ロジックツリー位置 → 当てるリーフ</div>
+          <div class="row-content"><b>Q1=B 未着手（内製ケース面接 vs AI面接導入で判断中）</b> → <a href="#card-b">B 啓蒙型</a> ＋ <a href="#card-c1"><b>D案 新卒ハイクラス転換（シグマクシス事例武器）</b></a> が直球</div>
+        </div>
+        <div class="row">
+          <div class="row-label">企業／チーム</div>
+          <div class="row-content">MBB/Big4戦略/独立系。新卒100-300名+中途50-100名/年。元コンサル出身で論理思考力高い。意思決定早い</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Goals & Challenges</div>
+          <div class="row-content">
+            <ul>
+              <li>ケース面接の評価バラつき解消（面接官属人化）</li>
+              <li>現役コンサルタント面接官の工数がプロジェクト圧迫</li>
+              <li>テスト形式は回答が出回る問題</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">刺さるメッセージ</div>
+          <div class="msg">「シグマクシスが導入して新卒420人完了、離脱率5%」— 同業事例が最強</div>
+        </div>
+        <div class="row">
+          <div class="row-label">運用方針</div>
+          <div class="obj">既存実績維持のみ / 山室・小野(コンサル経験者)の直接フォロー / 資料は極論不要 / 新規深追いせず</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier② 中村（保留） -->
+    <div class="persona tier2">
+      <div class="persona-head">
+        <span class="tier-tag">TIER ② 保留</span>
+        <span class="role">意思決定者</span>
+        <span class="name">中村 大輝（34歳）</span>
+        <span class="title">採用マネージャー / 急成長SaaS</span>
+      </div>
+      <div class="persona-body">
+        <div class="row">
+          <div class="row-label">ロジックツリー位置 → 当てるリーフ</div>
+          <div class="row-content"><b>Q1=B 未着手（「そもそも導入するか」判断フェーズ）</b> → <a href="#card-b"><b>B 啓蒙型（A案ベース）</b></a>。INTLOOP事例軸が補強弾</div>
+        </div>
+        <div class="row">
+          <div class="row-label">企業／チーム</div>
+          <div class="row-content">従業員300-3,000名。組織が半年で変わる。スピード重視・「まず試して判断」カルチャー。意思決定2週間-2ヶ月</div>
+        </div>
+        <div class="row">
+          <div class="row-label">最大の壁</div>
+          <div class="row-content">
+            <ul>
+              <li><b>「そもそもAI面接導入するか決まってない」</b>（最大の競合は"導入しない"）</li>
+              <li>PeopleX認知度No.1で最初に検討される</li>
+              <li>「うちの職種に合うのか」が不明</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">刺さりうるメッセージ</div>
+          <div class="msg">「組織が変わっても評価基準をすぐ再設計できます」（コンテキスト面接の本質価値）</div>
+        </div>
+        <div class="row">
+          <div class="row-label">保留理由</div>
+          <div class="obj">PeopleXに負ける傾向 / 「導入しない」判断が半数 / 訴求軸整理まで <b>一時保留</b>。ただしINTLOOP事例軸なら入れる余地あり</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 1. LOGIC TREE ============ -->
+<section>
+  <h2>1. 営業判定ロジックツリー</h2>
+  <p class="lead">ICP合致を確認したら、<b>「AI面接の取り組み状況」</b>を聞いて分岐 → 該当リーフのナラティブを当てる</p>
+
+  <div class="tree-root">
+    <div class="start-box">[Q1] 顧客は AI面接に取り組んでいますか？</div>
+  </div>
+
+  <div class="level-1-row">
+
+    <!-- ===== A. 取り組んでいる ===== -->
+    <div class="branch">
+      <div class="l1-node">
+        <div class="q">Q1 答え</div>
+        <div class="a">A. 取り組んでいる</div>
+      </div>
+
+      <div class="l1-node sub">
+        <div class="q">[Q2A] 対象は？</div>
+        <div class="a">新卒 / 中途</div>
+      </div>
+
+      <div class="level-2-wrap two-col">
+        <!-- A-1: 新卒だけ -->
+        <div>
+          <div class="l2-node hero">A-1. 新卒だけ</div>
+          <div class="leaf hero">
+            <div class="pri">★★★ 最有望</div>
+            <div class="name">新卒VARIETAS型エンプラ</div>
+            <span class="narr">A案 集中</span>
+            <div class="core">
+              <b>"新卒AIで実績のあるVARIETASでも、中途は別物"</b><br>
+              新卒で実績を見せ、中途ハイクラスに <b>横展開</b>。リプレイスへ繋ぐ最有望ライン。
+            </div>
+            <div class="ref">↓ <a href="#card-a1">カードA-1</a></div>
+          </div>
+        </div>
+
+        <!-- A-2/3: 中途含む（統合） -->
+        <div>
+          <div class="l2-node">A-2/3. 中途含む（両方 or 中途のみ）</div>
+          <div class="leaf">
+            <div class="pri">★★ 中途リプレイス</div>
+            <div class="name">中途ハイコンテキスト面接置換</div>
+            <span class="narr">A案 深さ特化</span>
+            <div class="core">
+              <b>"汎用AI面接では中途ハイクラスは取れない"</b><br>
+              全面リプレイス or <b>一部職種限定</b>導入の住み分け提案。
+            </div>
+            <div class="ref">↓ <a href="#card-a23">カードA-2/3</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== B. 取り組んでいない ===== -->
+    <div class="branch">
+      <div class="l1-node">
+        <div class="q">Q1 答え</div>
+        <div class="a">B. 取り組んでいない</div>
+      </div>
+
+      <div class="l1-node sub">
+        <div class="q">前提</div>
+        <div class="a">啓蒙基本／新卒中途どちらでも</div>
+      </div>
+
+      <div class="level-2-wrap single">
+        <div>
+          <div class="l2-node">B. 啓蒙型（+SPI置き換えオプション）</div>
+          <div class="leaf">
+            <div class="pri">★ 啓蒙コスト中</div>
+            <div class="name">未経験エンプラ</div>
+            <span class="narr">A案 ベース</span>
+            <div class="core">
+              <b>"AI面接で <u>よりハイエンドな人材</u> を採用できる"</b><br>
+              新卒/中途どちらでも入れる。SPI 使用が判明したら <b>置き換え提案</b> を追加で乗せる。
+            </div>
+            <div class="ref">↓ <a href="#card-b">カードB</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== C. やめた ===== -->
+    <div class="branch">
+      <div class="l1-node">
+        <div class="q">Q1 答え</div>
+        <div class="a">C. 過去はやってた／今はやってない</div>
+      </div>
+
+      <div class="l1-node sub">
+        <div class="q">[Q2C] どちらで失敗？</div>
+        <div class="a">新卒 / 中途</div>
+      </div>
+
+      <div class="level-2-wrap two-col">
+        <!-- C-1: 新卒で失敗 → D案 -->
+        <div>
+          <div class="l2-node">C-1. 新卒ハイクラス転換（新卒で失敗 → D案）</div>
+          <div class="leaf">
+            <div class="pri">★ 警戒心戦</div>
+            <div class="name">新卒ハイクラス転換</div>
+            <span class="narr">D案 新卒ハイクラス転換</span>
+            <div class="core">
+              <b>"良い学生が取れなかった真因はコンテキスト不足"</b><br>
+              シグマクシス(新卒420人)等の <b>ハイクラス新卒事例</b> で再導入決済を取る。
+            </div>
+            <div class="ref">↓ <a href="#card-c1">カードC-1</a></div>
+          </div>
+        </div>
+
+        <!-- C-2: 中途で失敗 -->
+        <div>
+          <div class="l2-node">C-2. 中途ハイエンド転換（中途で失敗 → C案）</div>
+          <div class="leaf">
+            <div class="pri">★ 警戒心戦</div>
+            <div class="name">中途ハイエンド転換</div>
+            <span class="narr">C案 失敗転換</span>
+            <div class="core">
+              <b>"作業コスト削減目的のAI面接では、ハイエンド人材は取れない"</b><br>
+              <b>ハイエンド人材採用</b> という目的にフォーカスし直す転換ストーリー。
+            </div>
+            <div class="ref">↓ <a href="#card-c2">カードC-2</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 2. ナラティブ凡例 ============ -->
+<section>
+  <h2>2. ナラティブ4案 凡例</h2>
+  <div class="common-grid">
+    <div class="box" style="border-left-color: var(--gold);">
+      <h4 style="color:var(--gold);">A案: コンテキスト面接 — 中途ハイクラス主力</h4>
+      <p>候補者コンテキストを評価可能化。スクラッチ設計＋ナレッジグラフUIで差別化。<br><b>強い相手</b>: VARIETAS/PFN（10項目固定）/ 中途ハイクラス採用<br><b>弱い相手</b>: 完全未知層</p>
+    </div>
+    <div class="box">
+      <h4>B案: AI面接の第2世代 — カテゴリー創造</h4>
+      <p>既存AI面接の限界を踏まえて「次の世代」を打ち出す。<br><b>強い相手</b>: AI面接導入済で物足りない層<br><b>弱い相手</b>: 構造化面接派</p>
+    </div>
+    <div class="box">
+      <h4>C案: 失敗転換 / 構造化面接の次 — 中途失敗・SPI層</h4>
+      <p>過去中途失敗の真因転換 or SPI進化軸。<br><b>強い相手</b>: 中途AI面接やめた組 / SPI使用エンプラ<br><b>弱い相手</b>: コンサル系の差別化文脈</p>
+    </div>
+    <div class="box" style="border-left-color: var(--green);">
+      <h4 style="color: var(--green);">D案: 新卒ハイクラス転換 — シグマクシス事例武器</h4>
+      <p>新卒ハイクラス採用（コンサル/IBD/メガベン専門職等）に特化。<b>シグマクシス新卒420人 / INTLOOP</b> 等の実績で警戒心を上書き。<br><b>強い相手</b>: 新卒AI面接で失敗した層 / ハイクラス新卒採用<br><b>弱い相手</b>: 大量採用新卒層（PeopleX領域）</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. 詳細カード ============ -->
+<section>
+  <h2>3. 各リーフ詳細カード（営業トーク本体）</h2>
+  <p class="lead">ロジックツリーで該当ノードに到達したら、ここのカードを使って商談を回す</p>
+
+  <div class="cards">
+
+    <!-- ====== Card A-1 HERO ====== -->
+    <article class="card hero" id="card-a1">
+      <div class="card-head">
+        <span class="path">Q1=A → Q2A=新卒だけ</span>
+        <span class="pri-badge">★★★ 最有望</span>
+        <h3>A-1. 新卒VARIETAS型エンプラ（最有望ゾーン）</h3>
+      </div>
+      <div class="card-body">
+        <div class="col col-left">
+          <div class="block">
+            <div class="label">顧客像</div>
+            <ul>
+              <li>新卒で VARIETAS 等のAI面接を <b>導入済</b></li>
+              <li>AI面接リテラシー有 / 決済プロセス前例あり</li>
+              <li>VARIETAS の 10項目固定 / カスタマイズ不可の限界に <b>本人が気づいている</b></li>
+              <li>中途ハイクラスで「アトラクト不足 / ミスマッチ / 入社後活躍しない」現実問題</li>
+              <li>ICP Tier③ ど真ん中、中途で差別化のシナリオに完全合致</li>
+            </ul>
+            <div class="meta-tags">
+              <span class="competitor">敵: VARIETAS</span>
+              <span>Tier③ エンプラ</span>
+              <span>NTT/富士通/NEC級</span>
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">コアフレーズ</div>
+            <div class="core-frase">"新卒AIで実績のあるVARIETASでも、中途は別物。<br>10項目固定では、ハイクラスのアトラクトは取れない。"</div>
+          </div>
+          <div class="block">
+            <div class="label">補強ストーリー</div>
+            <ul>
+              <li>毎回 <b>スクラッチ設計</b>（カスタマイズではない）</li>
+              <li>スクラッチでも ①この価格で ②安定動作</li>
+              <li>採用ROI = 通過期待値 <b>3倍</b> → 既存面接コスト 1/3 → 残り 2/3 を頂く</li>
+              <li>新卒実績見せ → 中途リプレイスへ繋ぐ <b>横展開シナリオ</b></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col col-right">
+          <div class="block">
+            <div class="label">オープニング3行</div>
+            <div class="talk">
+              「御社が新卒で <em>VARIETAS</em> 等を使ってる前提で伺います。中途のハイクラス採用、満足できてますか？」<br>
+              「VARIETASは新卒の <em>10項目固定評価</em> で十分回るが、中途のハイエンドは候補者ごとに評価軸が違う。」<br>
+              「中途ハイクラスは <em>毎回スクラッチで面接設計</em> しないと、アトラクトもミスマッチ判定もブレるんです。」
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">逆質問への切り返し</div>
+            <ul>
+              <li><b>Q:</b> VARIETASでカスタマイズ追加すればいいのでは？<br><b>A:</b> 項目固定の母体は変えられない。スクラッチが前提のプロダクトと構造が違う</li>
+              <li><b>Q:</b> 中途は対面で十分では？<br><b>A:</b> 工数ではなく <b>通過期待値が3倍</b> 違う → 既存コスト1/3</li>
+              <li><b>Q:</b> SPIと何が違う？<br><b>A:</b> SPI=能力定量化、コンテキスト面接=価値観/組織適性のアトラクト材料化</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="label">提案ライン / 次アクション</div>
+            <ul>
+              <li>① コンテキスト面接 1枚資料 共有（価値→ハウ）</li>
+              <li>② ROI/TCO計算（SPI予算 + 既存中途面接コスト → 1/3）</li>
+              <li>③ 導入事例（シグマクシス等）→ 同企業の中途展開提案</li>
+              <li>④ ナレッジグラフUIデモ（ロックイン根拠の可視化）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ====== Card A-2/3 統合 ====== -->
+    <article class="card" id="card-a23">
+      <div class="card-head">
+        <span class="path">Q1=A → Q2A=中途含む（両方 or 中途のみ）</span>
+        <span class="pri-badge">★★</span>
+        <h3>A-2/3. 中途ハイコンテキスト面接置換（リプレイス or 一部職種）</h3>
+      </div>
+      <div class="card-body">
+        <div class="col col-left">
+          <div class="block">
+            <div class="label">顧客像</div>
+            <ul>
+              <li>中途で既にAI面接を導入済（汎用AI面接 or PeopleX等）</li>
+              <li>「中途で AI面接を選んだ判断」 = <b>中途採用の課題意識が明確</b></li>
+              <li>ただし、汎用AI面接は大量採用向きで <b>ハイクラスの深さ不足</b> を体感</li>
+              <li>新卒も使ってる場合は、住み分け前提の併用提案も可</li>
+            </ul>
+            <div class="meta-tags">
+              <span class="competitor">敵: 汎用中途AI面接 / PeopleX</span>
+              <span>Tier②/③</span>
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">コアフレーズ</div>
+            <div class="core-frase">"中途でAI面接を選んだ判断は正しい。<br>ただし、汎用AI面接では中途ハイクラスは取れない。"</div>
+          </div>
+          <div class="block">
+            <div class="label">2つの提案パターン</div>
+            <ul>
+              <li><b>① 全面リプレイス</b>: ハイクラス比率が高い企業向け</li>
+              <li><b>② 一部職種限定導入</b>: 戦略・専門職など特定枠だけCaseMatch、他は既存維持</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col col-right">
+          <div class="block">
+            <div class="label">オープニング3行</div>
+            <div class="talk">
+              「中途で既にAI面接を導入されているということは、<em>中途採用の課題</em>に明確な仮説がある方ですよね。」<br>
+              「ただ、汎用AI面接は新卒・大量採用向けで、<em>ハイクラスの深さ</em>は出にくいんです。」<br>
+              「全面切り替えか、<em>戦略・専門職枠だけCaseMatch</em>の併用か、選んでいただけます。」
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">逆質問への切り返し</div>
+            <ul>
+              <li><b>Q:</b> 既存ベンダーで足りない場面って？<br><b>A:</b> 戦略コンサル/IBD級のケース面接・専門職評価で再現できているか</li>
+              <li><b>Q:</b> 切り替えコストが…<br><b>A:</b> 1部門パイロット → 評価 → 拡大のステップ提案</li>
+              <li><b>Q:</b> 2つ運用する管理コストは？<br><b>A:</b> ナレッジグラフでコンテキスト統合 / シート課金なし</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="label">提案ライン / 次アクション</div>
+            <ul>
+              <li>① 既存ベンダー vs CaseMatch 評価軸比較表</li>
+              <li>② 1部門パイロット提案（戦略・専門職枠）</li>
+              <li>③ 専門職データ厚みデモ + ROI試算</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ====== Card B 啓蒙型 ====== -->
+    <article class="card" id="card-b">
+      <div class="card-head">
+        <span class="path">Q1=B 取り組んでいない</span>
+        <span class="pri-badge">★ 啓蒙コスト中</span>
+        <h3>B. 啓蒙型（AI面接=ハイエンド採用、新卒中途どちらでも）</h3>
+      </div>
+      <div class="card-body">
+        <div class="col col-left">
+          <div class="block">
+            <div class="label">顧客像</div>
+            <ul>
+              <li>AI面接は使っていない / SPI使用有無は当初不明</li>
+              <li>採用は人材紹介＋対面面接が主、工数 or 質に課題</li>
+              <li>新卒/中途どちらの相談からでも入れる</li>
+              <li>SPI 使用が判明したら <b>置き換え提案を追加</b>（マーサー型ロジック）</li>
+            </ul>
+            <div class="meta-tags">
+              <span class="competitor">敵: 既存面接プロセス / SPI</span>
+              <span>Tier③ 中堅エンプラ</span>
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">コアフレーズ</div>
+            <div class="core-frase">"AI面接によって、<u>よりハイエンドな人材</u>を採用できる。<br>既存のAI面接(大量採用向け)とはここが違う。"</div>
+          </div>
+          <div class="block">
+            <div class="label">SPI置き換えサブストーリー（判明後に追加）</div>
+            <ul>
+              <li>「SPIで能力は測れているが、<b>価値観や組織適性</b>はどう測ってますか？」</li>
+              <li>「SPI予算をそのまま振り替えるマーサー型ロジックで稟議を通せます」</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col col-right">
+          <div class="block">
+            <div class="label">オープニング3行</div>
+            <div class="talk">
+              「AI面接、まだ使われていないとのこと。一般的なAI面接は <em>大量採用の工数削減</em> 向けに作られています。」<br>
+              「CaseMatch は逆で、<em>よりハイエンドな人材を取る</em> ためのAI面接です。」<br>
+              「新卒のハイクラスでも、中途のハイエンドでも、<em>候補者ごとのコンテキストを評価可能</em> にできます。」
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">逆質問への切り返し</div>
+            <ul>
+              <li><b>Q:</b> AI面接って怪しくない？<br><b>A:</b> 構造化面接の精度を、データで再現可能にしたもの</li>
+              <li><b>Q:</b> 既存のAI面接と何が違う？<br><b>A:</b> 大量採用向けの汎用AIではなく <b>ハイエンド人材の評価に特化</b></li>
+              <li><b>Q:</b> SPIと併用は可能？<br><b>A:</b> 置き換えがROI高、ただし併用も可能</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="label">提案ライン / 次アクション</div>
+            <ul>
+              <li>① 「ハイエンド人材採用のためのAI面接」1枚資料</li>
+              <li>② 新卒 or 中途 のどちらの課題から入るかヒアリング</li>
+              <li>③ SPI使用判明 → 置き換え試算追加</li>
+              <li>④ 啓蒙コンテンツ（コンテキスト面接とは）共有</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ====== Card C-1 新卒失敗 → D案 ====== -->
+    <article class="card" id="card-c1" style="border-top-color: var(--green);">
+      <div class="card-head">
+        <span class="path">Q1=C → Q2C=新卒で失敗</span>
+        <span class="pri-badge" style="background: var(--green);">★ D案 警戒心戦</span>
+        <h3 style="color: var(--green);">C-1. 新卒ハイクラス転換（過去AI面接 × 新卒で失敗）</h3>
+      </div>
+      <div class="card-body">
+        <div class="col col-left">
+          <div class="block">
+            <div class="label">顧客像</div>
+            <ul>
+              <li>新卒採用で過去AI面接を入れたが、<b>良い学生が取れなかった</b>で停止</li>
+              <li>「またAI面接？」と警戒心が強い</li>
+              <li>真因 = AI面接が <b>大量フィルタリング</b> 用で、ハイクラス評価不向きだった</li>
+              <li>シグマクシス / INTLOOP 等の <b>ハイクラス新卒事例</b> が決済材料に効く</li>
+              <li>適用領域: コンサル/IBD/メガベン専門職 新卒のハイエンド枠</li>
+            </ul>
+            <div class="meta-tags">
+              <span class="competitor">敵: 社内警戒心 + 過去ベンダー</span>
+              <span>Tier①寄り / Tier③新卒拡張</span>
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">コアフレーズ（D案）</div>
+            <div class="core-frase" style="background: #E8F5E9; border-left-color: var(--green); color: var(--green);">"良い学生が取れなかった真因は、<u>コンテキスト不足</u>のAI面接だったから。<br>ハイクラス新卒事例（シグマクシス420人等）で結果を出しています。"</div>
+          </div>
+          <div class="block">
+            <div class="label">D案の使い所（再掲）</div>
+            <ul>
+              <li>新卒AI面接で失敗した層 / ハイクラス新卒採用専用</li>
+              <li>事例武器（シグマクシス・INTLOOP）が最大の弾</li>
+              <li>大量採用新卒（PeopleX領域）には使わない</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col col-right">
+          <div class="block">
+            <div class="label">オープニング3行</div>
+            <div class="talk">
+              「過去AI面接を入れて止めた経緯、<em>新卒のどの層で物足りなかった</em>のでしょうか？」<br>
+              「だいたい <em>"質問固定でハイクラス学生の解像度が出ない"</em> が真因なんです。」<br>
+              「CaseMatch は <em>シグマクシス 新卒420人</em> のハイクラス採用で結果を出しています。」
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">逆質問への切り返し</div>
+            <ul>
+              <li><b>Q:</b> 同じ轍を踏まない？<br><b>A:</b> スクラッチ設計＋ナレッジグラフで毎回再構築、固定化しない</li>
+              <li><b>Q:</b> ハイクラス新卒の何が違う？<br><b>A:</b> ケース面接型の思考力評価 + コンテキストで人材ポテンシャル可視化</li>
+              <li><b>Q:</b> 大量新卒には？<br><b>A:</b> 適用外。<b>ハイエンド枠だけ</b>に絞り込む</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="label">提案ライン / 次アクション</div>
+            <ul>
+              <li>① 過去AI面接の失敗原因ヒアリングシート</li>
+              <li>② シグマクシス・INTLOOP 事例ケーススタディ共有</li>
+              <li>③ ハイクラス新卒(コンサル/IBD系)パイロット導入提案</li>
+              <li>④ Tier①営業導線（山室・小野フォロー）への接続</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ====== Card C-2 中途失敗 ====== -->
+    <article class="card" id="card-c2">
+      <div class="card-head">
+        <span class="path">Q1=C → Q2C=中途で失敗</span>
+        <span class="pri-badge">★ 警戒心戦</span>
+        <h3>C-2. 中途ハイエンド転換（過去AI面接 × 中途で失敗）</h3>
+      </div>
+      <div class="card-body">
+        <div class="col col-left">
+          <div class="block">
+            <div class="label">顧客像</div>
+            <ul>
+              <li>中途採用で過去AI面接を入れたが、形骸化/停止</li>
+              <li>真因 = 導入したのは <b>作業コスト削減目的</b> のAI面接ばかりで、<b>ハイエンド人材採用</b> という目的には十分でなかった</li>
+              <li>目的の再定義（コスト削減 → ハイエンド人材獲得）で再導入の物語が立つ</li>
+            </ul>
+            <div class="meta-tags">
+              <span class="competitor">敵: 社内警戒心 + 旧ベンダー</span>
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">コアフレーズ</div>
+            <div class="core-frase">"作業コスト削減目的のAI面接では、<u>ハイエンド人材は取れません</u>。<br>目的が違うんです。"</div>
+          </div>
+          <div class="block">
+            <div class="label">転換の論理</div>
+            <ul>
+              <li>過去AI面接 = 大量採用工数削減 → 「コスト削減」KPI</li>
+              <li>CaseMatch = ハイエンド人材獲得 → 「採用成功率×アトラクト」KPI</li>
+              <li>KPIごと変える提案（社内決済の通し方を変える）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col col-right">
+          <div class="block">
+            <div class="label">オープニング3行</div>
+            <div class="talk">
+              「過去のAI面接、<em>何のために</em>導入されたんですか？ コスト削減ですか？工数削減ですか？」<br>
+              「そうですよね。だから <em>ハイエンドの中途人材採用</em> という目的では、たぶん物足りなかったはずです。」<br>
+              「CaseMatchは目的が違って、<em>採用成功率とアトラクト</em>のためのAI面接なんです。」
+            </div>
+          </div>
+          <div class="block">
+            <div class="label">逆質問への切り返し</div>
+            <ul>
+              <li><b>Q:</b> AI面接で本当にハイエンド取れる？<br><b>A:</b> 専門職面接10万件データ + ナレッジグラフで評価軸の再現性</li>
+              <li><b>Q:</b> 現場の運用負荷は？<br><b>A:</b> スクラッチ設計はAI、人事は評価項目だけレビュー</li>
+              <li><b>Q:</b> 過去のベンダーと比較するなら？<br><b>A:</b> KPIごと変えます。「コスト削減」ではなく「採用成功率」で評価</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="label">提案ライン / 次アクション</div>
+            <ul>
+              <li>① 過去AI面接の <b>目的</b> ヒアリング（コスト削減 or 採用成功）</li>
+              <li>② 目的再定義シート（ハイエンド人材採用KPI）</li>
+              <li>③ パイロット導入（中途ハイクラス1部門限定）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============ 4. 共通弾倉 ============ -->
+<section>
+  <h2>4. 全パターン共通の弾倉</h2>
+  <div class="common-grid">
+    <div class="box">
+      <h4>採用ROI 公式</h4>
+      <p>通過期待値 <b>3倍</b> → 既存面接コスト <b>1/3</b> → 残り 2/3 を頂く<br>SPI置き換え（マーサー型）で稟議に通す</p>
+    </div>
+    <div class="box">
+      <h4>「カスタマイズ」NG / 「スクラッチ」OK</h4>
+      <p>VARIETAS = 10項目固定 / CaseMatch = <b>毎回スクラッチ設計</b>＋安定動作＋この価格</p>
+    </div>
+    <div class="box">
+      <h4>ロックイン根拠</h4>
+      <p>Obsidian的 <b>ナレッジグラフUI</b> / Excelエクスポート不可 / マーサー「めっちゃロックインされる」</p>
+    </div>
+    <div class="box">
+      <h4>事例化ルール</h4>
+      <p>営業段階で <b>導入事例OK握り</b> デフォルト化 / 値引きと引き換え / KPI: 月1件以上</p>
+    </div>
+    <div class="box">
+      <h4>カテゴリー三層</h4>
+      <p>AI面接(マーケット) × <b>コンテキスト面接</b>(カテゴリー) × ハイクラス採用(ポジショニング)</p>
+    </div>
+    <div class="box">
+      <h4>言葉のルール</h4>
+      <p>OK: コンテキスト面接 / コンテキスト型AI面接<br>NG: ハイコンテキストAI面接（重い）</p>
+    </div>
+    <div class="box">
+      <h4>WIN事例</h4>
+      <p>シグマクシス（新卒420人）/ INTLOOP（IT職・PMO職、推薦度8/10）<br>50社超の導入実績（戦略コンサル・IT・メガベンチャー中心）</p>
+    </div>
+    <div class="box">
+      <h4>NG: 大量採用SMB</h4>
+      <p>アルバイト/工場/SMB大量採用は <b>ICP外</b>。PeopleX系に渡すか、お断りする</p>
+    </div>
+    <div class="box">
+      <h4>5/24 残論点</h4>
+      <p>① B/C案の優先順位<br>② 海外プロダクトリサーチ<br>③ プライシングD案 詰め</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="v">CaseMatch Narrative Battlecard v3 (ICP + ロジックツリー型)</span> · 2026-05-23 · Source: 5/17 定例 / 4/19 ICP決定 / v2 構造を継承 + ICP冒頭追加 + C分岐リッチ化
+</footer>
+
+</body>
+</html>
