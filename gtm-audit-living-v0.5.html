@@ -628,12 +628,12 @@ const gtmAudit = {
       id: "competition", num: "05", group: "foundation",
       name: "Competition",
       status: "progress",
-      summary: "国内4社＋海外5社マップ完成。日本版Eightfold逆方向縦統合ポジション特定",
+      summary: "国内4社＋海外5社マップ＋VARIETAS最新（採用3.0/30項目）反映",
       current: {
-        version: "v3.0", date: "2026-05-24",
-        title: "国内4社＋海外5社マップ＋日本版Eightfold逆方向縦統合ポジション",
-        statement: "国内: PeopleX / VARIETAS / ROXX / HireVue。海外: HireVue / Eightfold / BrightHire / Sapia.ai / Perfect の5社比較完了。プロダクト構造として最も近いのはEightfold（$410M調達/$2.1Bバリュエーション）だが、『逆方向縦統合』（面接発→組織活用へ登る）で国内空白の右上ポジションを取りに行く戦略を確認。詳細: foreign-product-research HTML。",
-        source: "海外5社リサーチHTML / バトルカードv3 共通弾倉"
+        version: "v4.0", date: "2026-05-27",
+        title: "VARIETAS最新更新反映＋採用3.0 vs コンテキスト面接の世代観対比",
+        statement: "VARIETAS公式概要資料2024年版（24p）取り込み完了。『採用3.0』カテゴリー宣言＋約30項目評価（10項目固定は旧情報）＋申し送り/候補者FB機能＋内定承諾確率/価値観マッチ度訴求まで把握。CaseMatchは『コンテキスト面接＝深さ軸』で並立する世代観として対抗。VARIETAS比較表にCaseMatch登場せず＝直接脅威認識まだない＝静かに先行する余地あり。バトルカードv4／foreign-product-research HTML §6.4更新済。",
+        source: "VARIETAS公式概要資料2024年版 / battlecard-varietas v4 / 海外5社リサーチHTML"
       },
       history: [
         {
@@ -651,6 +651,31 @@ const gtmAudit = {
           statement: "PeopleX/VARIETAS/ROXX/HireVue 4社把握、撃ち返しメッセージ完成。",
           why_changed: "海外プロダクトリサーチが未完で残論点扱い → 5/24定例向けに着手必要",
           diff: [{ type: "add", text: "撃ち返しメッセージ vs VARIETAS / vs PeopleX を追加" }]
+        },
+        {
+          version: "v3.0", date: "2026-05-24",
+          title: "国内4社＋海外5社マップ＋日本版Eightfold逆方向縦統合ポジション",
+          trigger: "5/24定例＝海外5社リサーチ完了",
+          statement: "海外5社（HireVue/Eightfold/BrightHire/Sapia.ai/Perfect）比較＋日本版Eightfoldの逆方向縦統合ポジション特定。",
+          why_changed: "VARIETAS最新公式資料を入手→旧情報（10項目固定）と差分多数",
+          diff: [
+            { type: "add", text: "海外5社マップ＋日本版Eightfold逆方向縦統合ポジション" },
+            { type: "add", text: "Eightfold AI Interview Companion + BrightHire×Zoom 2大注意シグナル" }
+          ]
+        },
+        {
+          version: "v4.0", date: "2026-05-27",
+          title: "VARIETAS公式資料2024年版を反映＋採用3.0 vs コンテキスト面接の世代観",
+          trigger: "VARIETAS公式概要資料2024年版（24p）入手 2026-05-27",
+          statement: "VARIETAS『採用3.0』宣言＋30項目評価＋申し送り/候補者FB機能を取り込み、バトルカード v3→v4 全面更新。",
+          why_changed: "5/24定例の宿題『海外深掘り＋CI明確化』に応じて競合インテリ運用を強化",
+          diff: [
+            { type: "del", text: "VARIETAS = 10項目固定（旧情報）" },
+            { type: "add", text: "VARIETAS = 約30項目（志望度5＋能力27）＝『量の差別化』" },
+            { type: "add", text: "『採用3.0』カテゴリー宣言の認識＝CaseMatch『コンテキスト面接』と命名権争い" },
+            { type: "add", text: "申し送り機能＋候補者FB機能（VARIETAS既存）→ CaseMatchは入社後縦統合で差別化" },
+            { type: "add", text: "8論点比較（旧6論点＋縦統合＋世代観）" }
+          ]
         }
       ],
       richType: "competition",
@@ -971,7 +996,7 @@ function renderRichICP() {
     </div>
 
     <div class="rich-section">
-      <a class="external-link" href="CaseMatch_Narrative_Battlecard.html" target="_blank">バトルカードv3 ICPセクション 完全版を開く</a>
+      <a class="external-link" href="narrative-battlecard.html" target="_blank">バトルカードv3 ICPセクション 完全版を開く</a>
     </div>
   `;
 }
@@ -1054,7 +1079,7 @@ function renderRichPositioning() {
     </div>
 
     <div class="rich-section">
-      <a class="external-link" href="CaseMatch_Narrative_Battlecard.html" target="_blank">バトルカードv3 判定ロジックツリー完全版を開く</a>
+      <a class="external-link" href="narrative-battlecard.html" target="_blank">バトルカードv3 判定ロジックツリー完全版を開く</a>
     </div>
   `;
 }
@@ -1115,11 +1140,11 @@ function renderRichCompetition() {
             <td>無料〜¥500/件</td>
             <td class="weak">評価の深さ不足 / 専門職に不向き</td>
           </tr>
-          <tr>
-            <td class="cname">VARIETAS AI面接官</td>
-            <td>カルチャーフィット / 超大手向け</td>
+          <tr style="background: rgba(255,247,229,0.4);">
+            <td class="cname">VARIETAS AI面接官 ⚠️</td>
+            <td>「採用3.0」宣言／新卒・大企業1,000名超</td>
             <td>¥75,000/月〜</td>
-            <td class="weak">能力評価が浅い / 10項目固定 / カスタマイズ不可</td>
+            <td class="weak">約30項目テンプレ固定 / カスタマイズ不可 / 新卒前提 / 申し送りは面接→面接止まり</td>
           </tr>
           <tr>
             <td class="cname">ROXX Zcareer</td>
@@ -1209,8 +1234,8 @@ function renderRichCompetition() {
       <div class="rich-section-title">⚔️ 競合別 撃ち返しメッセージ</div>
       <div class="narrative-legend">
         <div class="narr-box gold">
-          <h4>vs VARIETAS（最重要敵）</h4>
-          <p>「新卒AIで実績のあるVARIETASでも、中途は別物。10項目固定では、ハイクラスのアトラクトは取れない。」</p>
+          <h4>vs VARIETAS（最重要敵・2026-05-27更新）</h4>
+          <p>「VARIETASは『採用3.0＝量で見極める』。CaseMatchは『コンテキスト面接＝御社の文脈で深く見極める』。約30項目あっても全企業共通テンプレ。新卒AIの実績は中途には転用できない。中途ハイクラスは候補者ごとの文脈が異なる別世界。」</p>
         </div>
         <div class="narr-box">
           <h4>vs PeopleX</h4>
@@ -1279,7 +1304,7 @@ function renderRichSalesPitch() {
     </div>
 
     <div class="rich-section">
-      <a class="external-link" href="CaseMatch_Narrative_Battlecard.html" target="_blank">バトルカードv3 完全版を開く（5リーフ詳細／逆質問切り返し／オープニング3行）</a>
+      <a class="external-link" href="narrative-battlecard.html" target="_blank">バトルカードv3 完全版を開く（5リーフ詳細／逆質問切り返し／オープニング3行）</a>
     </div>
   `;
 }
